@@ -2,8 +2,10 @@ package rockets.model;
 
 import java.math.BigDecimal;
 import java.time.LocalDate;
+import java.util.ArrayList;
 import java.util.Objects;
-import java.util.Set;
+import static org.apache.commons.lang3.Validate.notBlank;
+import static org.apache.commons.lang3.Validate.notNull;
 
 public class Launch extends Entity {
     public enum LaunchOutcome {
@@ -16,7 +18,7 @@ public class Launch extends Entity {
 
     private LaunchServiceProvider launchServiceProvider;
 
-    private Set<String> payload;
+    private ArrayList<Payload> payload;
 
     private String launchSite;
 
@@ -32,7 +34,9 @@ public class Launch extends Entity {
         return launchDate;
     }
 
-    public void setLaunchDate(LocalDate launchDate) {
+    public void setLaunchDate(LocalDate launchDate)
+    {
+        notNull(launchDate,"launchDate cannot be null");
         this.launchDate = launchDate;
     }
 
@@ -40,7 +44,9 @@ public class Launch extends Entity {
         return launchVehicle;
     }
 
-    public void setLaunchVehicle(Rocket launchVehicle) {
+    public void setLaunchVehicle(Rocket launchVehicle)
+    {
+        notNull(launchVehicle,"launchVehicle cannot be null");
         this.launchVehicle = launchVehicle;
     }
 
@@ -48,15 +54,19 @@ public class Launch extends Entity {
         return launchServiceProvider;
     }
 
-    public void setLaunchServiceProvider(LaunchServiceProvider launchServiceProvider) {
+    public void setLaunchServiceProvider(LaunchServiceProvider launchServiceProvider)
+    {
+        notNull(launchServiceProvider,"launchServiceProvider cannot be null");
         this.launchServiceProvider = launchServiceProvider;
     }
 
-    public Set<String> getPayload() {
+    public ArrayList<Payload> getPayload() {
         return payload;
     }
 
-    public void setPayload(Set<String> payload) {
+    public void setPayload(ArrayList<Payload> payload)
+    {
+        notNull(payload,"payload cannot be null");
         this.payload = payload;
     }
 
@@ -64,7 +74,9 @@ public class Launch extends Entity {
         return launchSite;
     }
 
-    public void setLaunchSite(String launchSite) {
+    public void setLaunchSite(String launchSite)
+    {
+        notBlank(launchSite,"launchSite cannot be null or empty");
         this.launchSite = launchSite;
     }
 
@@ -72,7 +84,9 @@ public class Launch extends Entity {
         return orbit;
     }
 
-    public void setOrbit(String orbit) {
+    public void setOrbit(String orbit)
+    {
+        notBlank(orbit,"orbit cannot be null or empty");
         this.orbit = orbit;
     }
 
@@ -81,6 +95,7 @@ public class Launch extends Entity {
     }
 
     public void setFunction(String function) {
+        notBlank(function,"function cannot be null or empty");
         this.function = function;
     }
 
@@ -89,6 +104,7 @@ public class Launch extends Entity {
     }
 
     public void setPrice(BigDecimal price) {
+        notNull(price,"price cannot be null");
         this.price = price;
     }
 
@@ -97,6 +113,7 @@ public class Launch extends Entity {
     }
 
     public void setLaunchOutcome(LaunchOutcome launchOutcome) {
+        notNull(launchOutcome,"launchOutcome cannot be null");
         this.launchOutcome = launchOutcome;
     }
 

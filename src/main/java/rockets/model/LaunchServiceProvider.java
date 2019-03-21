@@ -4,6 +4,8 @@ import com.google.common.collect.Sets;
 
 import java.util.Objects;
 import java.util.Set;
+import static org.apache.commons.lang3.Validate.notBlank;
+import static org.apache.commons.lang3.Validate.notNull;
 
 public class LaunchServiceProvider extends Entity {
     private String name;
@@ -17,6 +19,12 @@ public class LaunchServiceProvider extends Entity {
     private Set<Rocket> rockets;
 
     public LaunchServiceProvider(String name, int yearFounded, String country) {
+
+        notBlank(name,"constructor parameters cannot be empty or null strings");
+        notBlank(country,"constructor parameters cannot be empty or null strings");
+        if(yearFounded <= 0)
+            throw new IllegalArgumentException("constructor parameter : yearFounded cannot be zero or negative");
+
         this.name = name;
         this.yearFounded = yearFounded;
         this.country = country;
@@ -44,11 +52,26 @@ public class LaunchServiceProvider extends Entity {
         return rockets;
     }
 
+    public void setName(String name){
+        notBlank(name,"name cannot be null or empty");
+        this.name = name;}
+
+    public void setYearFounded(int year){
+        if(year <= 0)
+            throw new IllegalArgumentException("founded year cannot be negative or zero");
+        this.yearFounded = year;}
+
+    public void setCountry(String country){
+        notBlank(country,"country cannot be null or empty");
+        this.country = country;}
+
     public void setHeadquarters(String headquarters) {
+        notBlank(headquarters,"headquarters cannot be null or empty");
         this.headquarters = headquarters;
     }
 
     public void setRockets(Set<Rocket> rockets) {
+        notNull(rockets,"rockets cannot be null");
         this.rockets = rockets;
     }
 
