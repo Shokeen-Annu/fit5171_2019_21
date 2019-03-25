@@ -1,8 +1,6 @@
 package rockets.model;
 
 import java.util.Objects;
-import java.lang.Exception;
-
 import static org.apache.commons.lang3.Validate.notBlank;
 import static org.apache.commons.lang3.Validate.notNull;
 
@@ -85,7 +83,8 @@ public class Rocket extends Entity {
     }
 
     public void setMassToOther(String massToOther) {
-
+        notNull(name,"MassToOther cannot be null");
+        notBlank(name, "MassToOther cannot be empty");
         this.massToOther = massToOther;
     }
 
@@ -117,14 +116,9 @@ public class Rocket extends Entity {
     }
 
     public void checkValueShouldNotBeNegative(int number)   {
-
-
-        if (number < 0)
-        {
+        if (number < 0) {
             throw new IllegalArgumentException("Mass to LEO cannot be 0 or negative");
-
         }
-
 
     }
 

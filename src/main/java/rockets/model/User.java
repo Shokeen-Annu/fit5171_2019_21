@@ -1,8 +1,10 @@
 package rockets.model;
 
 import java.util.Objects;
+import java.util.regex.Pattern;
 
 import static org.apache.commons.lang3.Validate.notBlank;
+import static org.apache.commons.lang3.Validate.notNull;
 
 public class User extends Entity {
     private String firstName;
@@ -17,7 +19,10 @@ public class User extends Entity {
         return firstName;
     }
 
-    public void setFirstName(String firstName) {
+    public void setFirstName(String firstName)
+    {
+        notBlank(firstName, "first name cannot be null or empty");
+        notNull(firstName, "first name cannot be null or empty");
         this.firstName = firstName;
     }
 
@@ -26,6 +31,8 @@ public class User extends Entity {
     }
 
     public void setLastName(String lastName) {
+        notBlank(lastName, "last name cannot be null or empty");
+        notNull(lastName, "last name cannot be null or empty");
         this.lastName = lastName;
     }
 
@@ -35,8 +42,13 @@ public class User extends Entity {
 
     public void setEmail(String email) {
         notBlank(email, "email cannot be null or empty");
-        this.email = email;
-    }
+            if (isValid(email))
+                this.email = email;
+            else
+                throw new IllegalArgumentException("Email is not valid");
+        }
+
+
 
     public String getPassword() {
         return password;
@@ -44,8 +56,12 @@ public class User extends Entity {
 
     public void setPassword(String password) {
         notBlank(password, "password cannot be null or empty");
-        this.password = password;
-    }
+        if(isPasswordValidFormat(password))
+            this.password = password;
+            else
+                throw new IllegalArgumentException("Password is not in valid format");
+        }
+
 
     // match the given password against user's password and return the result
     public boolean isPasswordMatch(String password) {
@@ -73,4 +89,39 @@ public class User extends Entity {
                 ", email='" + email + '\'' +
                 '}';
     }
+    public static boolean isValid(String email) {
+        String regex = "^[A-Za-z0-9+_.-]+@(.+)$";
+        Pattern p = Pattern.compile(regex);
+        return p.matcher(email).matches();
+    }
+
+    private boolean isPasswordValidFormat(String pwd){
+        boolean result = true;
+        String num= "(.*[0-9].*)";
+        String upperChars = "(.*[A-Z].*)";
+        String lowerChars = "(.*[a-z].*)";
+        String specialChars = "(.*[,~,!,@,#,$,%,^,&,*,(,),-,_,=,+,[,{,],},|,;,:,<,>,/,?].*$)";
+        if (pwd.length() > 15 || pwd.length() < 8)
+        {
+            result = false;
+        }
+        if (!pwd.matches(upperChars))
+        {
+            result = false;
+        }
+        if (!pwd.matches(lowerChars)) {
+            result = false;
+        }
+        if (!pwd.matches(specialChars)) {
+            result = false;
+        }
+        if (!pwd.matches(num)) {
+            result = false;
+        }
+        if(!pwd.matches(upperChars)){
+            result = false;
+        }
+        return result;
+    }
+
 }
