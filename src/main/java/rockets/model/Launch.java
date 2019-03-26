@@ -12,6 +12,13 @@ public class Launch extends Entity {
         FAILED, SUCCESSFUL
     }
 
+    public enum Orbit{
+        LowEarthOrbit,
+        GeostationaryOrbit,
+        MediumEarthOrbit,
+        Others
+    }
+
     private LocalDate launchDate;
 
     private Rocket launchVehicle;
@@ -22,7 +29,7 @@ public class Launch extends Entity {
 
     private String launchSite;
 
-    private String orbit;
+    private Orbit orbit;
 
     private String function;
 
@@ -80,13 +87,13 @@ public class Launch extends Entity {
         this.launchSite = launchSite;
     }
 
-    public String getOrbit() {
+    public Orbit getOrbit() {
         return orbit;
     }
 
-    public void setOrbit(String orbit)
+    public void setOrbit(Orbit orbit)
     {
-        notBlank(orbit,"orbit cannot be null or empty");
+        notNull(orbit,"orbit cannot be null");
         this.orbit = orbit;
     }
 
@@ -105,7 +112,11 @@ public class Launch extends Entity {
 
     public void setPrice(BigDecimal price) {
         notNull(price,"price cannot be null");
-        this.price = price;
+        BigDecimal comparePrice = new BigDecimal(0);
+        if(price.compareTo(comparePrice) == 1)
+           this.price = price;
+        else
+            throw new IllegalArgumentException("price cannot be zero or negative");
     }
 
     public LaunchOutcome getLaunchOutcome() {

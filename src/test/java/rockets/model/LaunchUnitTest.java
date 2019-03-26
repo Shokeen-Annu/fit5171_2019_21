@@ -7,6 +7,7 @@ import org.junit.jupiter.api.Test;
 import org.junit.jupiter.params.ParameterizedTest;
 import org.junit.jupiter.params.provider.ValueSource;
 
+import java.math.BigDecimal;
 import java.time.LocalDate;
 
 import static org.junit.jupiter.api.Assertions.*;
@@ -73,22 +74,13 @@ public class LaunchUnitTest {
         assertEquals("launchSite cannot be null or empty",exception.getMessage());
     }
 
-    @DisplayName("Should throw exception when empty string or string of only spaces is passed to setOrbit method")
-    @ParameterizedTest
-    @ValueSource(strings = {"","  "})
-    public void shouldThrowExceptionWhenSetOrbitToEmptyString(String arg)
-    {
-        IllegalArgumentException exception = assertThrows(IllegalArgumentException.class,()->target.setOrbit(arg));
-        assertEquals("orbit cannot be null or empty",exception.getMessage());
-    }
-
     @DisplayName("Should throw exception when null is passed to setOrbit method")
     @Test
     public void shouldThrowExceptionWhenSetOrbitToNull()
     {
         NullPointerException exception = assertThrows(NullPointerException.class,
                 ()->target.setOrbit(null));
-        assertEquals("orbit cannot be null or empty",exception.getMessage());
+        assertEquals("orbit cannot be null",exception.getMessage());
     }
 
     @DisplayName("Should throw exception when empty string or string of only spaces is passed to setFunction method")
@@ -116,6 +108,26 @@ public class LaunchUnitTest {
         NullPointerException exception = assertThrows(NullPointerException.class,
                 ()->target.setPrice(null));
         assertEquals("price cannot be null",exception.getMessage());
+    }
+
+    @DisplayName("Should throw exception when zero is passed to setPrice method")
+    @Test
+    public void shouldThrowExceptionWhenSetPriceToZero()
+    {
+        BigDecimal price = new BigDecimal(0);
+        IllegalArgumentException exception = assertThrows(IllegalArgumentException.class,
+                ()->target.setPrice(price));
+        assertEquals("price cannot be zero or negative",exception.getMessage());
+    }
+
+    @DisplayName("Should throw exception when negative value is passed to setPrice method")
+    @Test
+    public void shouldThrowExceptionWhenSetPriceToNegative()
+    {
+        BigDecimal price = new BigDecimal(-7000);
+        IllegalArgumentException exception = assertThrows(IllegalArgumentException.class,
+                ()->target.setPrice(price));
+        assertEquals("price cannot be zero or negative",exception.getMessage());
     }
 
     @DisplayName("Should throw exception when null is passed to setLaunchOutcome method")
@@ -151,19 +163,19 @@ public class LaunchUnitTest {
         target.setLaunchDate(LocalDate.of(1995,9,27));
         target.setLaunchVehicle(rocket);
         target.setLaunchServiceProvider(serviceProvider);
-        target.setOrbit(orbit);
+        target.setOrbit(Launch.Orbit.GeostationaryOrbit);
 
         Launch launch = new Launch();
         launch.setLaunchDate(LocalDate.of(1995,9,27));
         launch.setLaunchVehicle(rocket);
         launch.setLaunchServiceProvider(serviceProvider);
-        launch.setOrbit(orbit);
+        launch.setOrbit(Launch.Orbit.GeostationaryOrbit);
         assertTrue(target.equals(launch));
     }
 
     @DisplayName("Equals method should return false when two launch objects are not equal")
     @Test
-    public void equalsMethodShouldReturnFalseWhenTwoLaunchObjectsAreNotEqual()
+    public void equalsMethodShouldReturnFalseWhenTwoLaunchObjectsAreNotEqual1()
     {
         Rocket rocket = new Rocket("W2M","India","Antrix");
         LaunchServiceProvider serviceProvider = new LaunchServiceProvider("Antrix",1992,"India");
@@ -171,13 +183,31 @@ public class LaunchUnitTest {
         target.setLaunchDate(LocalDate.of(1998,9,27));
         target.setLaunchVehicle(rocket);
         target.setLaunchServiceProvider(serviceProvider);
-        target.setOrbit(orbit);
+        target.setOrbit(Launch.Orbit.GeostationaryOrbit);
 
         Launch launch = new Launch();
         launch.setLaunchDate(LocalDate.of(1995,9,27));
         launch.setLaunchVehicle(rocket);
         launch.setLaunchServiceProvider(serviceProvider);
-        launch.setOrbit(orbit);
+        launch.setOrbit(Launch.Orbit.Others);
         assertFalse(target.equals(launch));
     }
+    @DisplayName("Equals method should return false when two launch objects are not equal")
+    @Test
+    public void equalsMethodShouldReturnFalseWhenTwoLaunchObjectsAreNotEqual2()
+    {
+        Rocket rocket = new Rocket("W2M","India","Antrix");
+        LaunchServiceProvider serviceProvider = new LaunchServiceProvider("Antrix",1992,"India");
+        String orbit = "low earth orbit";
+        target.setLaunchDate(LocalDate.of(1998,9,27));
+        target.setLaunchVehicle(rocket);
+        target.setLaunchServiceProvider(serviceProvider);
+        target.setOrbit(Launch.Orbit.GeostationaryOrbit);
+
+        Launch launch = new Launch();
+        launch.setLaunchDate(LocalDate.of(1995,9,27));
+        assertFalse(target.equals(launch));
+    }
+
+
 }
