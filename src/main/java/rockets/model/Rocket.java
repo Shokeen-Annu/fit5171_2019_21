@@ -1,7 +1,7 @@
 package rockets.model;
 
 import java.util.Objects;
-
+import static org.apache.commons.lang3.Validate.notBlank;
 import static org.apache.commons.lang3.Validate.notNull;
 
 public class Rocket extends Entity {
@@ -11,11 +11,14 @@ public class Rocket extends Entity {
 
     private String manufacturer;
 
-    private String massToLEO;
+    private int massToLEO;
 
     private String massToGTO;
 
     private String massToOther;
+
+    public Rocket()
+    {}
 
     /**
      * All parameters shouldn't be null.
@@ -25,9 +28,13 @@ public class Rocket extends Entity {
      * @param manufacturer
      */
     public Rocket(String name, String country, String manufacturer) {
-        notNull(name);
-        notNull(country);
-        notNull(manufacturer);
+        notNull(name,"name cannot be null");
+        notBlank(name, "name cannot be empty");
+        notNull(country,"country cannot be null");
+        notBlank(country, "country cannot be empty");
+        notNull(manufacturer,"manufacturer cannot be null");
+        notBlank(manufacturer, "manufacturer cannot be empty");
+
 
         this.name = name;
         this.country = country;
@@ -46,7 +53,7 @@ public class Rocket extends Entity {
         return manufacturer;
     }
 
-    public String getMassToLEO() {
+    public int getMassToLEO() {
         return massToLEO;
     }
 
@@ -58,15 +65,26 @@ public class Rocket extends Entity {
         return massToOther;
     }
 
-    public void setMassToLEO(String massToLEO) {
+    public void setMassToLEO(int massToLEO) {
+        checkValueShouldNotBeNegative(massToLEO);
         this.massToLEO = massToLEO;
     }
 
     public void setMassToGTO(String massToGTO) {
-        this.massToGTO = massToGTO;
+        try {
+            int mass = Integer.parseInt(massToGTO);
+            this.massToGTO = massToGTO;
+        }
+        catch(NumberFormatException exception)
+        {
+            throw new NumberFormatException("Mass to GTO cannot be non numerical");
+        }
+
     }
 
     public void setMassToOther(String massToOther) {
+        notNull(name,"MassToOther cannot be null");
+        notBlank(name, "MassToOther cannot be empty");
         this.massToOther = massToOther;
     }
 
@@ -96,4 +114,12 @@ public class Rocket extends Entity {
                 ", massToOther='" + massToOther + '\'' +
                 '}';
     }
+
+    public void checkValueShouldNotBeNegative(int number)   {
+        if (number < 0) {
+            throw new IllegalArgumentException("Mass to LEO cannot be 0 or negative");
+        }
+
+    }
+
 }

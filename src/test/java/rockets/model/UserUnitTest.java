@@ -16,6 +16,34 @@ public class UserUnitTest {
         target = new User();
     }
 
+    // BASIC CHECKS FOR OTHER ATTRIBUTES
+    @DisplayName("should throw exception when pass a empty first name address to setFirstName function")
+    @Test
+    public void shouldThrowExceptionWhenSetFirstNameToEmpty() {
+        IllegalArgumentException exception = assertThrows(IllegalArgumentException.class, () -> target.setFirstName(" "));
+        assertEquals("first name cannot be null or empty", exception.getMessage());
+    }
+
+    @DisplayName("should throw exception when pass null first name to setFirstName function")
+    @Test
+    public void shouldThrowExceptionWhenSetFirstNameToNull() {
+        NullPointerException exception = assertThrows(NullPointerException.class, () -> target.setFirstName(null));
+        assertEquals("first name cannot be null or empty", exception.getMessage());
+    }
+
+    @DisplayName("should throw exception when pass a empty first name address to setFirstName function")
+    @Test
+    public void shouldThrowExceptionWhenSetLastNameToEmpty() {
+        IllegalArgumentException exception = assertThrows(IllegalArgumentException.class, () -> target.setLastName(" "));
+        assertEquals("last name cannot be null or empty", exception.getMessage());
+    }
+
+    @DisplayName("should throw exception when pass null first name to setFirstName function")
+    @Test
+    public void shouldThrowExceptionWhenSetLastNameToNull() {
+        NullPointerException exception = assertThrows(NullPointerException.class, () -> target.setLastName(null));
+        assertEquals("last name cannot be null or empty", exception.getMessage());
+    }
 
     @DisplayName("should throw exception when pass a empty email address to setEmail function")
     @ParameterizedTest
@@ -31,7 +59,7 @@ public class UserUnitTest {
         NullPointerException exception = assertThrows(NullPointerException.class, () -> target.setEmail(null));
         assertEquals("email cannot be null or empty", exception.getMessage());
     }
-
+    //tEST FOR TESTING EMAIL FORMAT
     @DisplayName("should throw exceptions when pass a null password to setPassword function")
     @Test
     public void shouldThrowExceptionWhenSetPasswordToNull() {
@@ -39,7 +67,7 @@ public class UserUnitTest {
                 () -> target.setPassword(null));
         assertEquals("password cannot be null or empty", exception.getMessage());
     }
-
+    //TEST FOR TESTING PASSWORD FORMAT : MIN 8 CHARS AND SHOULD HAVE ALPHABETS AND NUMBERS
     @DisplayName("should return true when two users have the same email")
     @Test
     public void shouldReturnTrueWhenUsersHaveSameEmail() {
@@ -58,5 +86,34 @@ public class UserUnitTest {
         User anotherUser = new User();
         anotherUser.setEmail("def@example.com");
         assertFalse(target.equals(anotherUser));
+    }
+
+    @DisplayName("should return false when two users have different emails")
+    @Test
+    public void shouldReturnTrueWhenPasswordsMatch() {
+        target.setPassword("abc@");
+        assertTrue(target.isPasswordMatch("abc@"));
+    }
+
+    @DisplayName("should return false when two users have different emails")
+    @Test
+    public void shouldReturnFalseWhenPasswordsDoNotMatch() {
+        target.setPassword("abc@");
+        assertFalse(target.isPasswordMatch("abc"));
+    }
+
+    @DisplayName("should throw exception when email is not in format")
+    @Test
+    public void shouldThrowExceptionWhenNegativeNumberPassed() {
+        IllegalArgumentException exception = assertThrows(IllegalArgumentException.class, () -> target.setEmail("pranav#gmail.com"));
+        assertEquals("Email is not valid", exception.getMessage());
+
+    }
+
+    @DisplayName("should throw exception when password is not in valid format")
+    @Test
+    public void shouldThrowExceptionWhenPasswordIsNotInValidFormat() {
+        IllegalArgumentException exception = assertThrows(IllegalArgumentException.class, () -> target.setPassword("Pranavefsefsf"));
+        assertEquals("Password is not in valid format", exception.getMessage());
     }
 }
