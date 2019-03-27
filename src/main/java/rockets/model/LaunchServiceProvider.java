@@ -23,8 +23,7 @@ public class LaunchServiceProvider extends Entity {
 
         notBlank(name,"constructor parameters cannot be empty or null strings");
         notBlank(country,"constructor parameters cannot be empty or null strings");
-        if(yearFounded <= 0)
-            throw new IllegalArgumentException("constructor parameter : yearFounded cannot be zero or negative");
+        validateYearFounded(yearFounded);
 
         this.name = name;
         this.yearFounded = yearFounded;
@@ -58,15 +57,7 @@ public class LaunchServiceProvider extends Entity {
         this.name = name;}
 
     public void setYearFounded(int year){
-        if(year <= 0)
-            throw new IllegalArgumentException("founded year cannot be negative or zero");
-        else
-        {
-            String yearString = Integer.toString(year);
-            if(yearString.length()!= 4)
-                throw  new IllegalArgumentException("Year Founded should be in YYYY format");
-
-        }
+        validateYearFounded(year);
         this.yearFounded = year;
     }
 
@@ -98,5 +89,18 @@ public class LaunchServiceProvider extends Entity {
     public int hashCode() {
 
         return Objects.hash(name, yearFounded, country);
+    }
+
+    public void validateYearFounded(int year)
+    {
+        if(year <= 0)
+            throw new IllegalArgumentException("founded year cannot be negative or zero");
+        else
+        {
+            String yearString = Integer.toString(year);
+            if(yearString.length()!= 4)
+                throw  new IllegalArgumentException("Year Founded should be in YYYY format");
+
+        }
     }
 }
