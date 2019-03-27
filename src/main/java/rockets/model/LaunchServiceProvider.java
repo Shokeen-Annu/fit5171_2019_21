@@ -1,6 +1,7 @@
 package rockets.model;
 
 import com.google.common.collect.Sets;
+import com.sun.xml.internal.ws.commons.xmlutil.Converter;
 
 import java.util.Objects;
 import java.util.Set;
@@ -59,7 +60,15 @@ public class LaunchServiceProvider extends Entity {
     public void setYearFounded(int year){
         if(year <= 0)
             throw new IllegalArgumentException("founded year cannot be negative or zero");
-        this.yearFounded = year;}
+        else
+        {
+            String yearString = Integer.toString(year);
+            if(yearString.length()!= 4)
+                throw  new IllegalArgumentException("Year Founded should be in YYYY format");
+
+        }
+        this.yearFounded = year;
+    }
 
     public void setCountry(String country){
         notBlank(country,"country cannot be null or empty");

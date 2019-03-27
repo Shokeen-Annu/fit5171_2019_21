@@ -7,8 +7,7 @@ import org.junit.jupiter.api.Test;
 import org.junit.jupiter.params.ParameterizedTest;
 import org.junit.jupiter.params.provider.ValueSource;
 
-import static org.junit.jupiter.api.Assertions.assertEquals;
-import static org.junit.jupiter.api.Assertions.assertThrows;
+import static org.junit.jupiter.api.Assertions.*;
 
 public class LaunchServiceProviderUnitTest {
 
@@ -150,4 +149,55 @@ public class LaunchServiceProviderUnitTest {
         IllegalArgumentException exception = assertThrows(IllegalArgumentException.class,()->new LaunchServiceProvider("W2M",-1990,"India"));
         assertEquals("constructor parameter : yearFounded cannot be zero or negative",exception.getMessage());
     }
+
+    @DisplayName("Should throw exception when setYearFounded is not in YYYY format")
+    @Test
+    public void shouldThrowExceptionWhenSetYearFoundedWrongFormat()
+    {
+        IllegalArgumentException exception = assertThrows(IllegalArgumentException.class,()-> target.setYearFounded(89));
+        assertEquals("Year Founded should be in YYYY format",exception.getMessage());
+    }
+
+    @DisplayName("Should set Year Founded in YYYY format with correct input")
+    @Test
+    public void shouldSetYearFoundedWithProperFormat()
+    {
+        target.setYearFounded(1990);
+        assertEquals(1990,target.getYearFounded());
+    }
+
+    @DisplayName("Should return false when null is passed to equals method")
+    @Test
+    public void shouldReturnFalseWhenNullPassedToEquals()
+    {
+        assertFalse(target.equals(null));
+    }
+
+    @DisplayName("Should return false when string is passed to equals method")
+    @Test
+    public void shouldReturnFalseWhenStringPassedToEquals()
+    {
+        assertFalse(target.equals("text"));
+    }
+
+    @DisplayName("Equals method should return true when two launch service provider objects are equal")
+    @Test
+    public void equalsMethodShouldReturnTrueWhenTwoLaunchServiceProviderObjectsAreEqual()
+    {
+        LaunchServiceProvider serviceProvider1 = new LaunchServiceProvider("Antrix",1992,"India");
+        LaunchServiceProvider serviceProvider2 = new LaunchServiceProvider("Antrix",1992,"India");
+        assertTrue(serviceProvider1.equals(serviceProvider2));
+    }
+
+    @DisplayName("Equals method should return false when two launch service provider objects are not equal")
+    @Test
+    public void equalsMethodShouldReturnFalseWhenTwoLaunchServiceProviderObjectsAreNotEqual()
+    {
+        LaunchServiceProvider serviceProvider1 = new LaunchServiceProvider("Antrix",1992,"India");
+        LaunchServiceProvider serviceProvider2 = new LaunchServiceProvider("Nasa",1992,"India");
+
+        assertFalse(serviceProvider1.equals(serviceProvider2));
+    }
+
+
 }
