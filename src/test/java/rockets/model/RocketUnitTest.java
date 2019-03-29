@@ -56,20 +56,41 @@ public class RocketUnitTest {
         assertEquals("manufacturer cannot be null", exception.getMessage());
     }
 
+    @DisplayName("should throw exception when pass a non numerical value to setMassToGTO function")
     @Test
-    public void shouldThrowExceptionWhenNegativeNumberPassed() {
-
-        IllegalArgumentException exception = assertThrows(IllegalArgumentException.class, () -> rocket.setMassToLEO(-1));
-        assertEquals("Mass to LEO cannot be 0 or negative", exception.getMessage());
-
-    }
-    @Test
-    public void shouldThrowExceptionWhenNonNumericalValuePassed() {
+    public void shouldThrowExceptionWhenNonNumericalValuePassedToSetMassToGto() {
 
         NumberFormatException exception = assertThrows(NumberFormatException.class, () -> rocket.setMassToGTO("abcd"));
         assertEquals("Mass to GTO cannot be non numerical", exception.getMessage());
 
     }
+
+    @DisplayName("should throw exception when pass a non numerical value to setMassToLEO function")
+    @Test
+    public void shouldThrowExceptionWhenNonNumericalValuePassedToSetMassToLeo() {
+
+        NumberFormatException exception = assertThrows(NumberFormatException.class, () -> rocket.setMassToLEO("abcd"));
+        assertEquals("Mass to LEO cannot be non numerical", exception.getMessage());
+
+    }
+
+    @DisplayName("should pass when a numerical value in String to setMassToGTO function")
+    @Test
+    public void shouldThrowExceptionWhenNumericalValuePassedToSetMassToGto() {
+
+        rocket.setMassToGTO("9500");
+        assertEquals("9500",rocket.getMassToGTO());
+
+    }
+
+    @DisplayName("should pass  when a numerical value in string to setMassToLEO function")
+    @Test
+    public void shouldThrowExceptionWhenNumericalValuePassedToSetMassToLeo() {
+
+        rocket.setMassToLEO("8000");
+        assertEquals("8000",rocket.getMassToLEO());
+    }
+
     @DisplayName("should throw exception when pass a empty MassToOther to setMassToOther function")
     @Test
     public void shouldThrowExceptionWhenSetMassToOtherToEmpty() {

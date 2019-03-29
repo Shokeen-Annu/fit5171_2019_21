@@ -11,7 +11,7 @@ public class Rocket extends Entity {
 
     private String manufacturer;
 
-    private int massToLEO;
+    private String massToLEO;
 
     private String massToGTO;
 
@@ -53,7 +53,7 @@ public class Rocket extends Entity {
         return manufacturer;
     }
 
-    public int getMassToLEO() {
+    public String getMassToLEO() {
         return massToLEO;
     }
 
@@ -65,14 +65,22 @@ public class Rocket extends Entity {
         return massToOther;
     }
 
-    public void setMassToLEO(int massToLEO) {
-        checkValueShouldNotBeNegative(massToLEO);
-        this.massToLEO = massToLEO;
+    public void setMassToLEO(String massToLEO) {
+        try {
+            int mass = Integer.parseInt(massToLEO);
+            checkValueShouldNotBeNegative(mass);
+            this.massToLEO = massToLEO;
+        }
+        catch(NumberFormatException exception)
+        {
+            throw new NumberFormatException("Mass to LEO cannot be non numerical");
+        }
     }
 
     public void setMassToGTO(String massToGTO) {
         try {
             int mass = Integer.parseInt(massToGTO);
+            checkValueShouldNotBeNegative(mass);
             this.massToGTO = massToGTO;
         }
         catch(NumberFormatException exception)
@@ -115,11 +123,6 @@ public class Rocket extends Entity {
                 '}';
     }
 
-    public void checkValueShouldNotBeNegative(int number)   {
-        if (number < 0) {
-            throw new IllegalArgumentException("Mass to LEO cannot be 0 or negative");
-        }
-
     }
 
-}
+

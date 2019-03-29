@@ -53,12 +53,21 @@ public class UserUnitTest {
         assertEquals("email cannot be null or empty", exception.getMessage());
     }
 
+    @DisplayName("should throw exception when pass a empty password to setPassword function")
+    @ParameterizedTest
+    @ValueSource(strings = {"", " ", "  "})
+    public void shouldThrowExceptionWhenPasswordSetToEmpty(String password) {
+        IllegalArgumentException exception = assertThrows(IllegalArgumentException.class, () -> target.setPassword(password));
+        assertEquals("password cannot be empty", exception.getMessage());
+    }
+
     @DisplayName("should throw exception when pass null to setEmail function")
     @Test
     public void shouldThrowExceptionWhenSetEmailToNull() {
         NullPointerException exception = assertThrows(NullPointerException.class, () -> target.setEmail(null));
         assertEquals("email cannot be null or empty", exception.getMessage());
     }
+
     //tEST FOR TESTING EMAIL FORMAT
     @DisplayName("should throw exceptions when pass a null password to setPassword function")
     @Test
@@ -67,6 +76,7 @@ public class UserUnitTest {
                 () -> target.setPassword(null));
         assertEquals("password cannot be null or empty", exception.getMessage());
     }
+
     //TEST FOR TESTING PASSWORD FORMAT : MIN 8 CHARS AND SHOULD HAVE ALPHABETS AND NUMBERS
     @DisplayName("should return true when two users have the same email")
     @Test
@@ -77,7 +87,6 @@ public class UserUnitTest {
         anotherUser.setEmail(email);
         assertTrue(target.equals(anotherUser));
     }
-
 
     @DisplayName("should return false when two users have different emails")
     @Test
@@ -104,7 +113,7 @@ public class UserUnitTest {
 
     @DisplayName("should throw exception when email is not in format")
     @Test
-    public void shouldThrowExceptionWhenNegativeNumberPassed() {
+    public void shouldThrowExceptionWhenEmailIsNotInValidFormat() {
         IllegalArgumentException exception = assertThrows(IllegalArgumentException.class, () -> target.setEmail("pranav#gmail.com"));
         assertEquals("Email is not valid", exception.getMessage());
 
@@ -115,5 +124,21 @@ public class UserUnitTest {
     public void shouldThrowExceptionWhenPasswordIsNotInValidFormat() {
         IllegalArgumentException exception = assertThrows(IllegalArgumentException.class, () -> target.setPassword("Pranavefsefsf"));
         assertEquals("Password is not in valid format", exception.getMessage());
+    }
+
+    @DisplayName("should set Email in valid format")
+    @Test
+    public void shouldSetEmailInValidFormat() {
+        target.setEmail("pranav123@gmail.com");
+        assertEquals("pranav123@gmail.com", target.getEmail());
+
+    }
+
+    @DisplayName("should set password in valid format")
+    @Test
+    public void shouldSetPasswordInValidFormat() {
+        target.setPassword("pranav123@A");
+        assertEquals("pranav123@A", target.getPassword());
+
     }
 }

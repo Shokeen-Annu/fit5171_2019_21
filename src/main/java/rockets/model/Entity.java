@@ -1,6 +1,5 @@
 package rockets.model;
-import static org.apache.commons.lang3.Validate.notBlank;
-import static org.apache.commons.lang3.Validate.notNull;
+
 
 public abstract class Entity {
     private Long id;
@@ -13,8 +12,6 @@ public abstract class Entity {
 
     public void setWikilink(String wikilink)
     {
-        notBlank(wikilink,"Wikilink cannot be null or empty");
-        notNull(wikilink,"Wikilink cannot be null or empty");
         this.wikilink = wikilink;
     }
 

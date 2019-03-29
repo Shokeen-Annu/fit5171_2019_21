@@ -42,7 +42,7 @@ public class User extends Entity {
 
     public void setEmail(String email) {
         notBlank(email, "email cannot be null or empty");
-            if (isValid(email))
+            if (isEmailValidFormat(email))
                 this.email = email;
             else
                 throw new IllegalArgumentException("Email is not valid");
@@ -55,7 +55,8 @@ public class User extends Entity {
     }
 
     public void setPassword(String password) {
-        notBlank(password, "password cannot be null or empty");
+        notBlank(password, "password cannot be empty");
+        notNull(password, "password cannot be null");
         if(isPasswordValidFormat(password))
             this.password = password;
             else
@@ -89,13 +90,13 @@ public class User extends Entity {
                 ", email='" + email + '\'' +
                 '}';
     }
-    public static boolean isValid(String email) {
+    public static boolean isEmailValidFormat(String email) {
         String regex = "^[A-Za-z0-9+_.-]+@(.+)$";
         Pattern p = Pattern.compile(regex);
         return p.matcher(email).matches();
     }
 
-    private boolean isPasswordValidFormat(String pwd){
+    public boolean isPasswordValidFormat(String pwd){
         boolean result = true;
         String num= "(.*[0-9].*)";
         String upperChars = "(.*[A-Z].*)";
