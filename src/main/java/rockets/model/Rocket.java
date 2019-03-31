@@ -91,8 +91,8 @@ public class Rocket extends Entity {
     }
 
     public void setMassToOther(String massToOther) {
-        notNull(name,"MassToOther cannot be null");
-        notBlank(name, "MassToOther cannot be empty");
+
+        notBlank(massToOther, "MassToOther cannot be null or empty");
         this.massToOther = massToOther;
     }
 

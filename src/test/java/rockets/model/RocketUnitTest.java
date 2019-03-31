@@ -3,6 +3,9 @@ package rockets.model;
 import org.junit.jupiter.api.BeforeEach;
 import org.junit.jupiter.api.DisplayName;
 import org.junit.jupiter.api.Test;
+import org.junit.jupiter.params.ParameterizedTest;
+import org.junit.jupiter.params.provider.ValueSource;
+
 import static org.junit.jupiter.api.Assertions.assertEquals;
 import static org.junit.jupiter.api.Assertions.assertThrows;
 
@@ -92,17 +95,18 @@ public class RocketUnitTest {
     }
 
     @DisplayName("should throw exception when pass a empty MassToOther to setMassToOther function")
-    @Test
-    public void shouldThrowExceptionWhenSetMassToOtherToEmpty() {
-        IllegalArgumentException exception = assertThrows(IllegalArgumentException.class, () -> rocket.setMassToOther(" "));
-        assertEquals("MassToOther cannot be empty", exception.getMessage());
+    @ParameterizedTest
+    @ValueSource(strings = {"", " ", "  "})
+    public void shouldThrowExceptionWhenSetMassToOtherToEmpty(String massToOthers) {
+        IllegalArgumentException exception = assertThrows(IllegalArgumentException.class, () -> rocket.setMassToOther(massToOthers));
+        assertEquals("MassToOther cannot be null or empty", exception.getMessage());
     }
 
     @DisplayName("should throw exception when pass a null MassToOther to setMassToOther function")
     @Test
     public void shouldThrowExceptionWhenSetMassToOtherToNull() {
         NullPointerException exception = assertThrows(NullPointerException.class, () -> rocket.setMassToOther(null));
-        assertEquals("MassToOther cannot be null", exception.getMessage());
+        assertEquals("MassToOther cannot be null or empty", exception.getMessage());
     }
 
 

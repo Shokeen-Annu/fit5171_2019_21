@@ -58,7 +58,7 @@ public class UserUnitTest {
     @ValueSource(strings = {"", " ", "  "})
     public void shouldThrowExceptionWhenPasswordSetToEmpty(String password) {
         IllegalArgumentException exception = assertThrows(IllegalArgumentException.class, () -> target.setPassword(password));
-        assertEquals("password cannot be empty", exception.getMessage());
+        assertEquals("password cannot be null or empty", exception.getMessage());
     }
 
     @DisplayName("should throw exception when pass null to setEmail function")
@@ -100,15 +100,15 @@ public class UserUnitTest {
     @DisplayName("should return false when two users have different emails")
     @Test
     public void shouldReturnTrueWhenPasswordsMatch() {
-        target.setPassword("abc@");
-        assertTrue(target.isPasswordMatch("abc@"));
+        target.setPassword("abc@Asdfdd8");
+        assertTrue(target.isPasswordMatch("abc@Asdfdd8"));
     }
 
     @DisplayName("should return false when two users have different emails")
     @Test
     public void shouldReturnFalseWhenPasswordsDoNotMatch() {
-        target.setPassword("abc@");
-        assertFalse(target.isPasswordMatch("abc"));
+        target.setPassword("abc@Asdw7");
+        assertFalse(target.isPasswordMatch("abc@Asdw8"));
     }
 
     @DisplayName("should throw exception when email is not in format")

@@ -55,8 +55,8 @@ public class User extends Entity {
     }
 
     public void setPassword(String password) {
-        notBlank(password, "password cannot be empty");
-        notNull(password, "password cannot be null");
+        notBlank(password, "password cannot be null or empty");
+
         if(isPasswordValidFormat(password))
             this.password = password;
             else
