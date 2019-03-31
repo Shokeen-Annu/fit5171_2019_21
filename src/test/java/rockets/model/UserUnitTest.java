@@ -68,7 +68,7 @@ public class UserUnitTest {
         assertEquals("email cannot be null or empty", exception.getMessage());
     }
 
-    //tEST FOR TESTING EMAIL FORMAT
+
     @DisplayName("should throw exceptions when pass a null password to setPassword function")
     @Test
     public void shouldThrowExceptionWhenSetPasswordToNull() {
@@ -77,7 +77,7 @@ public class UserUnitTest {
         assertEquals("password cannot be null or empty", exception.getMessage());
     }
 
-    //TEST FOR TESTING PASSWORD FORMAT : MIN 8 CHARS AND SHOULD HAVE ALPHABETS AND NUMBERS
+
     @DisplayName("should return true when two users have the same email")
     @Test
     public void shouldReturnTrueWhenUsersHaveSameEmail() {
@@ -118,7 +118,7 @@ public class UserUnitTest {
         assertEquals("Email is not valid", exception.getMessage());
 
     }
-
+    //TEST FOR TESTING PASSWORD FORMAT : MIN 8 CHARS AND SHOULD HAVE ALPHABETS AND NUMBERS
     @DisplayName("should throw exception when password is not in valid format")
     @Test
     public void shouldThrowExceptionWhenPasswordIsNotInValidFormat() {

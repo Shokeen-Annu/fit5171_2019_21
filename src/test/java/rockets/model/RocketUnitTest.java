@@ -79,7 +79,7 @@ public class RocketUnitTest {
 
     @DisplayName("should pass when a numerical value in String to setMassToGTO function")
     @Test
-    public void shouldThrowExceptionWhenNumericalValuePassedToSetMassToGto() {
+    public void shouldSetMassToGtoWhenNumericalValueIsPassed() {
 
         rocket.setMassToGTO("9500");
         assertEquals("9500",rocket.getMassToGTO());
@@ -88,7 +88,7 @@ public class RocketUnitTest {
 
     @DisplayName("should pass  when a numerical value in string to setMassToLEO function")
     @Test
-    public void shouldThrowExceptionWhenNumericalValuePassedToSetMassToLeo() {
+    public void shouldPassWhenNumericalValuePassedToSetMassToLeo() {
 
         rocket.setMassToLEO("8000");
         assertEquals("8000",rocket.getMassToLEO());

@@ -12,13 +12,6 @@ public class  Launch extends Entity {
         FAILED, SUCCESSFUL
     }
 
-    public enum Orbit{
-        LowEarthOrbit,
-        GeostationaryOrbit,
-        MediumEarthOrbit,
-        Others
-    }
-
     private LocalDate launchDate;
 
     private Rocket launchVehicle;
@@ -29,7 +22,7 @@ public class  Launch extends Entity {
 
     private String launchSite;
 
-    private Orbit orbit;
+    private String orbit;
 
     private String function;
 
@@ -87,13 +80,13 @@ public class  Launch extends Entity {
         this.launchSite = launchSite;
     }
 
-    public Orbit getOrbit() {
+    public String getOrbit() {
         return orbit;
     }
 
-    public void setOrbit(Orbit orbit)
+    public void setOrbit(String orbit)
     {
-        notNull(orbit,"orbit cannot be null");
+        notBlank(orbit,"orbit cannot be null or empty");
         this.orbit = orbit;
     }
 

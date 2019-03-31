@@ -9,7 +9,8 @@ public class Payload extends Entity {
     {
         satellite,
         spaceProbe,
-        crewedSpaceCraft
+        crewedSpaceCraft,
+        others
     }
     private TypeOfPayload type;
     private double weight;

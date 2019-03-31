@@ -18,6 +18,7 @@ public class LaunchServiceProviderUnitTest {
     {
         target = new LaunchServiceProvider("Antrix",1992,"India");
     }
+
     @DisplayName("Should throw exception when empty string or string of only spaces is passed to setHeadquarters method")
     @ParameterizedTest
     @ValueSource(strings = {"","  "})
@@ -70,7 +71,7 @@ public class LaunchServiceProviderUnitTest {
     public void shouldThrowExceptionWhenSetYearFoundedToNegative()
     {
         IllegalArgumentException exception = assertThrows(IllegalArgumentException.class,
-                ()->target.setYearFounded(-10));
+                ()->target.setYearFounded(-1));
         assertEquals("founded year cannot be negative or zero",exception.getMessage());
     }
 
@@ -83,6 +84,21 @@ public class LaunchServiceProviderUnitTest {
         assertEquals("founded year cannot be negative or zero",exception.getMessage());
     }
 
+    @DisplayName("Should throw exception when setYearFounded is not in YYYY format")
+    @Test
+    public void shouldThrowExceptionWhenSetYearFoundedWrongFormat()
+    {
+        IllegalArgumentException exception = assertThrows(IllegalArgumentException.class,()-> target.setYearFounded(89));
+        assertEquals("Year Founded should be in YYYY format",exception.getMessage());
+    }
+
+    @DisplayName("Should set Year Founded in YYYY format with correct input")
+    @Test
+    public void shouldSetYearFoundedWithProperFormat()
+    {
+        target.setYearFounded(1990);
+        assertEquals(1990,target.getYearFounded());
+    }
 
     @DisplayName("Should throw exception when empty string or string of only spaces is passed to setCountry method")
     @ParameterizedTest
@@ -156,22 +172,6 @@ public class LaunchServiceProviderUnitTest {
     {
         IllegalArgumentException exception = assertThrows(IllegalArgumentException.class,()->new LaunchServiceProvider("W2M",89,"India"));
         assertEquals("Year Founded should be in YYYY format",exception.getMessage());
-    }
-
-    @DisplayName("Should throw exception when setYearFounded is not in YYYY format")
-    @Test
-    public void shouldThrowExceptionWhenSetYearFoundedWrongFormat()
-    {
-        IllegalArgumentException exception = assertThrows(IllegalArgumentException.class,()-> target.setYearFounded(89));
-        assertEquals("Year Founded should be in YYYY format",exception.getMessage());
-    }
-
-    @DisplayName("Should set Year Founded in YYYY format with correct input")
-    @Test
-    public void shouldSetYearFoundedWithProperFormat()
-    {
-        target.setYearFounded(1990);
-        assertEquals(1990,target.getYearFounded());
     }
 
     @DisplayName("Should return false when null is passed to equals method")
