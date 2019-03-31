@@ -51,7 +51,7 @@ public class PayloadUnitTest {
     public void shouldThrowExceptionWhenSetWeightToNegative()
     {
         IllegalArgumentException exception = assertThrows(IllegalArgumentException.class,
-                ()->target.setWeight(-1.1));
+                ()->target.setWeight(-0.99));
         assertEquals("weight cannot be negative or zero",exception.getMessage());
     }
 
@@ -62,5 +62,13 @@ public class PayloadUnitTest {
         IllegalArgumentException exception = assertThrows(IllegalArgumentException.class,
                 ()->target.setWeight(0));
         assertEquals("weight cannot be negative or zero",exception.getMessage());
+    }
+
+    @DisplayName("Should set weight when positive value is passed to setWeight method")
+    @Test
+    public void shouldSetWeightToPositiveValue()
+    {
+        target.setWeight(0.1);
+        assertEquals(0.1,target.getWeight());
     }
 }
