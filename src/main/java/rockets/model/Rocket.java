@@ -66,6 +66,7 @@ public class Rocket extends Entity {
 
     public void setMassToLEO(String massToLEO) {
         try {
+            notBlank(massToLEO);
             int mass = Integer.parseInt(massToLEO);
             checkValueShouldNotBeNegative(mass);
             this.massToLEO = massToLEO;
