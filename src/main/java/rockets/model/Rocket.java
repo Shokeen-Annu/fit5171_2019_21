@@ -9,7 +9,7 @@ public class Rocket extends Entity {
 
     private String country;
 
-    private String manufacturer;
+    private LaunchServiceProvider manufacturer;
 
     private String massToLEO;
 
@@ -27,13 +27,12 @@ public class Rocket extends Entity {
      * @param country
      * @param manufacturer
      */
-    public Rocket(String name, String country, String manufacturer) {
+    public Rocket(String name, String country, LaunchServiceProvider manufacturer) {
         notNull(name,"name cannot be null");
         notBlank(name, "name cannot be empty");
         notNull(country,"country cannot be null");
         notBlank(country, "country cannot be empty");
         notNull(manufacturer,"manufacturer cannot be null");
-        notBlank(manufacturer, "manufacturer cannot be empty");
 
 
         this.name = name;
@@ -49,7 +48,7 @@ public class Rocket extends Entity {
         return country;
     }
 
-    public String getManufacturer() {
+    public LaunchServiceProvider getManufacturer() {
         return manufacturer;
     }
 

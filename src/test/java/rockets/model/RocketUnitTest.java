@@ -1,13 +1,13 @@
 package rockets.model;
 
+import org.junit.jupiter.api.AfterEach;
 import org.junit.jupiter.api.BeforeEach;
 import org.junit.jupiter.api.DisplayName;
 import org.junit.jupiter.api.Test;
 import org.junit.jupiter.params.ParameterizedTest;
 import org.junit.jupiter.params.provider.ValueSource;
 
-import static org.junit.jupiter.api.Assertions.assertEquals;
-import static org.junit.jupiter.api.Assertions.assertThrows;
+import static org.junit.jupiter.api.Assertions.*;
 
 public class RocketUnitTest {
     private Rocket rocket;
@@ -17,39 +17,36 @@ public class RocketUnitTest {
         rocket = new Rocket();
     }
 
+    @AfterEach
+    public void tearDown() {
+    }
+
     @DisplayName("should throw exception when pass a empty rocket name  to parameterized constructor ")
     @Test
     public void shouldThrowExceptionWhenEmptyNameParameterIsPassedToConstructor() {
-        IllegalArgumentException exception = assertThrows(IllegalArgumentException.class, () ->  new Rocket(" ", "Australia", "ABC"));
+        IllegalArgumentException exception = assertThrows(IllegalArgumentException.class, () ->  new Rocket(" ", "Australia", new LaunchServiceProvider("SpaceX", 2002, "USA")));
         assertEquals("name cannot be empty", exception.getMessage());
     }
 
     @DisplayName("should throw exception when pass a null rocket name  to parameterized constructor")
     @Test
     public void shouldThrowExceptionWhenNullNameParameterIsPassedToConstructor() {
-        NullPointerException exception = assertThrows(NullPointerException.class, () -> new Rocket(null, "Australia", "ABC"));
+        NullPointerException exception = assertThrows(NullPointerException.class, () -> new Rocket(null, "Australia", new LaunchServiceProvider("SpaceX", 2002, "USA")));
         assertEquals("name cannot be null", exception.getMessage());
     }
 
     @DisplayName("should throw exception when pass a empty country  to parameterized constructor")
     @Test
     public void shouldThrowExceptionWhenEmptyCountryParameterIsPassedToConstructor() {
-        IllegalArgumentException exception = assertThrows(IllegalArgumentException.class, () -> new Rocket("rocketA", " ", "ABC"));
+        IllegalArgumentException exception = assertThrows(IllegalArgumentException.class, () -> new Rocket("rocketA", " ", new LaunchServiceProvider("SpaceX", 2002, "USA")));
         assertEquals("country cannot be empty", exception.getMessage());
     }
 
     @DisplayName("should throw exception when pass a null country  to parameterized constructor")
     @Test
     public void shouldThrowExceptionWhenNullCountryParameterIsPassedToConstructor() {
-        NullPointerException exception = assertThrows(NullPointerException.class, () -> new Rocket("RocketB", null, "ABC"));
+        NullPointerException exception = assertThrows(NullPointerException.class, () -> new Rocket("RocketB", null, new LaunchServiceProvider("SpaceX", 2002, "USA")));
         assertEquals("country cannot be null", exception.getMessage());
-    }
-
-    @DisplayName("should throw exception when pass a empty manufacturer to parameterized constructor")
-    @Test
-    public void shouldThrowExceptionWhenEmptyManufacturerParameterIsPassedToConstructor() {
-        IllegalArgumentException exception = assertThrows(IllegalArgumentException.class, () -> new Rocket("rocketA", "India", " "));
-        assertEquals("manufacturer cannot be empty", exception.getMessage());
     }
 
     @DisplayName("should throw exception when pass a null country  to parameterized constructor")
@@ -109,5 +106,44 @@ public class RocketUnitTest {
         assertEquals("MassToOther cannot be null or empty", exception.getMessage());
     }
 
+    @DisplayName("should create rocket successfully when given right parameters to constructor")
+    @Test
+    public void shouldConstructRocketObject() {
+        String name = "BFR";
+        String country = "USA";
+        LaunchServiceProvider manufacturer = new LaunchServiceProvider("SpaceX", 2002, "USA");
+        Rocket bfr = new Rocket(name, country, manufacturer);
+        assertNotNull(bfr);
+    }
 
+    @DisplayName("should throw exception when given null manufacturer to constructor")
+    @Test
+    public void shouldThrowExceptionWhenNoManufacturerGiven() {
+        String name = "BFR";
+        String country = "USA";
+        assertThrows(NullPointerException.class, () -> new Rocket(name, country, null));
+    }
+
+    @DisplayName("should set rocket massToLEO value")
+    @ValueSource(strings = {"10000", "15000"})
+    public void shouldSetMassToLEOWhenGivenCorrectValue(String massToLEO) {
+        String name = "BFR";
+        String country = "USA";
+        LaunchServiceProvider manufacturer = new LaunchServiceProvider("SpaceX", 2002, "USA");
+
+        Rocket bfr = new Rocket(name, country, manufacturer);
+
+        bfr.setMassToLEO(massToLEO);
+        assertEquals(massToLEO, bfr.getMassToLEO());
+    }
+
+    @DisplayName("should throw exception when set massToLEO to null")
+    @Test
+    public void shouldThrowExceptionWhenSetMassToLEOToNull() {
+        String name = "BFR";
+        String country = "USA";
+        LaunchServiceProvider manufacturer = new LaunchServiceProvider("SpaceX", 2002, "USA");
+        Rocket bfr = new Rocket(name, country, manufacturer);
+        assertThrows(NullPointerException.class, () -> bfr.setMassToLEO(null));
+    }
 }

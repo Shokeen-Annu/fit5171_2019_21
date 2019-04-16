@@ -176,7 +176,7 @@ public class LaunchUnitTest {
     @Test
     public void equalsMethodShouldReturnTrueWhenTwoLaunchObjectsAreEqual()
     {
-        Rocket rocket = new Rocket("W2M","India","Antrix");
+        Rocket rocket = new Rocket("W2M","India",new LaunchServiceProvider("Antrix", 1992, "India"));
         LaunchServiceProvider serviceProvider = new LaunchServiceProvider("Antrix",1992,"India");
         String orbit = "low earth orbit";
         target.setLaunchDate(LocalDate.of(1995,9,27));
@@ -196,7 +196,7 @@ public class LaunchUnitTest {
     @Test
     public void equalsMethodShouldReturnFalseWhenTwoLaunchObjectsAreNotEqual()
     {
-        Rocket rocket = new Rocket("W2M","India","Antrix");
+        Rocket rocket = new Rocket("W2M","India",new LaunchServiceProvider("Antrix", 1992, "India"));
         LaunchServiceProvider serviceProvider = new LaunchServiceProvider("Antrix",1992,"India");
         String orbit = "low earth orbit";
         target.setLaunchDate(LocalDate.of(1998,9,27));
