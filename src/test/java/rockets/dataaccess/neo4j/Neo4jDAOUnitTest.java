@@ -9,10 +9,7 @@ import org.neo4j.ogm.drivers.embedded.driver.EmbeddedDriver;
 import org.neo4j.ogm.session.Session;
 import org.neo4j.ogm.session.SessionFactory;
 import rockets.dataaccess.DAO;
-import rockets.model.Launch;
-import rockets.model.LaunchServiceProvider;
-import rockets.model.Rocket;
-import rockets.model.User;
+import rockets.model.*;
 
 import java.time.LocalDate;
 import java.util.Collection;
@@ -166,6 +163,46 @@ public class Neo4jDAOUnitTest {
         assertTrue(dao.loadAll(Rocket.class).isEmpty());
         assertFalse(dao.loadAll(LaunchServiceProvider.class).isEmpty());
     }
+
+    @Test
+    public void shouldDeletePayload() {
+        Payload pay = new Payload();
+        pay.setName("abc");
+        pay.setType(Payload.TypeOfPayload.satellite);
+        pay.setWeight(3200.00);
+        dao.createOrUpdate(pay);
+        assertNotNull(pay.getId());
+        assertFalse(dao.loadAll(Payload.class).isEmpty());
+        dao.delete(pay);
+        assertTrue(dao.loadAll(Payload.class).isEmpty());
+    }
+
+    @Test
+    public void shouldDeleteLaunchServiceProvider() {
+        dao.createOrUpdate(esa);
+        assertNotNull(esa.getId());
+        assertFalse(dao.loadAll(LaunchServiceProvider.class).isEmpty());
+        dao.delete(esa);
+        assertTrue(dao.loadAll(LaunchServiceProvider.class).isEmpty());
+    }
+
+    @Test
+    public void shouldDeleteLaunch() {
+        Launch launch = new Launch();
+        launch.setLaunchDate(LocalDate.of(1993,9,21));
+        launch.setLaunchVehicle(rocket);
+        launch.setLaunchSite("abc");
+        launch.setLaunchOutcome(Launch.LaunchOutcome.SUCCESSFUL);
+        dao.createOrUpdate(launch);
+        assertNotNull(launch.getId());
+        assertFalse(dao.loadAll(Launch.class).isEmpty());
+        dao.delete(launch);
+        assertTrue(dao.loadAll(Launch.class).isEmpty());
+    }
+
+
+
+
 
     @AfterEach
     public void tearDown() {

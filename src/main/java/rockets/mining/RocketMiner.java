@@ -8,10 +8,10 @@ import rockets.model.LaunchServiceProvider;
 import rockets.model.Rocket;
 
 import java.math.BigDecimal;
-import java.util.Collection;
-import java.util.Comparator;
-import java.util.List;
+import java.util.*;
 import java.util.stream.Collectors;
+import java.util.ArrayList;
+import java.util.Iterator;
 
 public class RocketMiner {
     private static Logger logger = LoggerFactory.getLogger(RocketMiner.class);
@@ -28,12 +28,12 @@ public class RocketMiner {
      *
      * @param k the number of rockets to be returned.
      * @return the list of k most active rockets.
-     */
+    */
     public List<Rocket> mostLaunchedRockets(int k) {
         return null;
     }
 
-    /**
+    /*
      * TODO: to be implemented & tested!
      * <p>
      * Returns the top-k most reliable launch service providers as measured
@@ -42,9 +42,25 @@ public class RocketMiner {
      * @param k the number of launch service providers to be returned.
      * @return the list of k most reliable ones.
      */
+    /**
     public List<LaunchServiceProvider> mostReliableLaunchServiceProviders(int k) {
+        logger.info("find most launched rockets " + k + " launches");
+        Collection<Launch> launches = dao.loadAll(Launch.class);
+        Collection<LaunchServiceProvider> launcheService = dao.loadAll(LaunchServiceProvider.class);
+        List<launches> list = new ArrayList<>();
+        List<LaunchServiceProvider> serviceList = new ArrayList<>();
+        Iterator iterator = list.iterator();
+
+        for(int i = 0; i<list.size(); i++)
+        {
+            Launch abc = list.get(i);
+            if(abc.getLaunchOutcome().equals(Launch.LaunchOutcome.SUCCESSFUL))
+            serviceList.add(abc.getLaunchServiceProvider());
+        }
+
+        Comparator<Launch> launchComparator = (a, b) -> -a.getLaunchOutcome().compareTo(b.getLaunchOutcome());
         return null;
-    }
+    }*/
 
     /**
      * <p>
