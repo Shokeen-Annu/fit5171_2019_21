@@ -12,6 +12,7 @@ import rockets.model.Launch;
 import rockets.model.LaunchServiceProvider;
 import rockets.model.Rocket;
 
+import java.math.BigDecimal;
 import java.time.LocalDate;
 import java.util.ArrayList;
 import java.util.Arrays;
@@ -55,6 +56,9 @@ public class RocketMinerUnitTest {
         // index of rocket of each launch
         int[] rocketIndex = new int[]{0, 0, 0, 0, 1, 1, 1, 2, 2, 3};
 
+        // index of price for each launch
+        BigDecimal[] launchPrice = new BigDecimal[] {new BigDecimal(2.33), new BigDecimal(4.33),new BigDecimal(7.33),new BigDecimal(13.23),new BigDecimal(2.33),new BigDecimal(2.33),new BigDecimal(27.33), new BigDecimal(12.33),new BigDecimal(2.83),new BigDecimal(6.33)};
+
         // 10 launches
         launches = IntStream.range(0, 10).mapToObj(i -> {
             logger.info("create " + i + " launch in month: " + months[i]);
@@ -63,6 +67,7 @@ public class RocketMinerUnitTest {
             l.setLaunchVehicle(rockets.get(rocketIndex[i]));
             l.setLaunchSite("VAFB");
             l.setOrbit("LEO");
+            l.setPrice(launchPrice[i]);
             spy(l);
             return l;
         }).collect(Collectors.toList());
@@ -76,6 +81,17 @@ public class RocketMinerUnitTest {
         List<Launch> sortedLaunches = new ArrayList<>(launches);
         sortedLaunches.sort((a, b) -> -a.getLaunchDate().compareTo(b.getLaunchDate()));
         List<Launch> loadedLaunches = miner.mostRecentLaunches(k);
+        assertEquals(k, loadedLaunches.size());
+        assertEquals(sortedLaunches.subList(0, k), loadedLaunches);
+    }
+
+    @ParameterizedTest
+    @ValueSource(ints = {1,2,3})
+    public void shouldReturnTopMostExpensiveLaunches(int k) {
+        when(dao.loadAll(Launch.class)).thenReturn(launches);
+        List<Launch> sortedLaunches = new ArrayList<>(launches);
+        sortedLaunches.sort((a, b) -> -a.getPrice().compareTo(b.getPrice()));
+        List<Launch> loadedLaunches = miner.mostExpensiveLaunches(k);
         assertEquals(k, loadedLaunches.size());
         assertEquals(sortedLaunches.subList(0, k), loadedLaunches);
     }

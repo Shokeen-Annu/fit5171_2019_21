@@ -95,7 +95,10 @@ public class RocketMiner {
      * @return the list of k most expensive launches.
      */
     public List<Launch> mostExpensiveLaunches(int k) {
-        return null;
+        logger.info("find most expensive " + k + " launches");
+        Collection<Launch> launches = dao.loadAll(Launch.class);
+        Comparator<Launch> launchPriceComparator = (a, b) -> -a.getPrice().compareTo(b.getPrice());
+        return launches.stream().sorted(launchPriceComparator).limit(k).collect(Collectors.toList());
     }
 
     /**
