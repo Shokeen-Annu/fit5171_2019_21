@@ -1,5 +1,6 @@
 package rockets.mining;
 
+import org.neo4j.cypher.internal.frontend.v3_2.phases.Do;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 import rockets.dataaccess.DAO;
@@ -7,11 +8,13 @@ import rockets.model.Launch;
 import rockets.model.LaunchServiceProvider;
 import rockets.model.Rocket;
 
-import java.math.BigDecimal;
+
 import java.util.*;
 import java.util.stream.Collectors;
 import java.util.ArrayList;
-import java.util.Iterator;
+import java.util.Map.Entry;
+import java.util.Set;
+
 
 public class RocketMiner {
     private static Logger logger = LoggerFactory.getLogger(RocketMiner.class);
@@ -30,8 +33,30 @@ public class RocketMiner {
      * @return the list of k most active rockets.
     */
     public List<Rocket> mostLaunchedRockets(int k) {
-        return null;
+        logger.info("find most launched rockets " + k + " launches");
+        Collection<Launch> launches = dao.loadAll(Launch.class);
+        List<Rocket> r = new ArrayList<>();
+
+        for(Launch l: launches) {
+            if(l.getLaunchDate() != null) {
+                r.add(l.getLaunchVehicle());
+            }
+        }
+        Map<Rocket, Long> hashmap = r.stream().collect(Collectors.groupingBy(Rocket -> Rocket, Collectors.counting()));
+        Map<Rocket, Long> sorted = hashmap .entrySet() .stream() .sorted(Collections.reverseOrder(Map.Entry.comparingByValue())) .collect( Collectors.toMap(Map.Entry::getKey, Map.Entry::getValue, (e1, e2) -> e2, LinkedHashMap::new));
+        System.out.println("map after sorting by values in descending order: " + sorted);
+
+        //Set<Entry<Rocket, Long>> entries = hashmap.entrySet();
+        //Comparator<Entry<Rocket, Long>> activeRocketsComparator = (a,b) -> -a.getValue().compareTo(b.getValue());
+        //List<Entry<Rocket, Long>> listOfEntries = new ArrayList<>(entries);
+        //Collections.sort(listOfEntries,activeRocketsComparator);
+        List<Rocket> rockets = new ArrayList<>();
+        for(Map.Entry<Rocket,Long> e: sorted.entrySet()){
+            rockets.add(e.getKey());
+        }
+        return rockets.stream().limit(k).collect(Collectors.toList());
     }
+
 
     /*
      * TODO: to be implemented & tested!
@@ -42,26 +67,26 @@ public class RocketMiner {
      * @param k the number of launch service providers to be returned.
      * @return the list of k most reliable ones.
      */
-    /**
+
     public List<LaunchServiceProvider> mostReliableLaunchServiceProviders(int k) {
-        logger.info("find most launched rockets " + k + " launches");
+        logger.info("find most reliable rockets " + k + " launches");
         Collection<Launch> launches = dao.loadAll(Launch.class);
-        Collection<LaunchServiceProvider> launcheService = dao.loadAll(LaunchServiceProvider.class);
-        List<launches> list = new ArrayList<>();
-        List<LaunchServiceProvider> serviceList = new ArrayList<>();
-        Iterator iterator = list.iterator();
+        List<LaunchServiceProvider> lsp = new ArrayList<>();
 
-        for(int i = 0; i<list.size(); i++)
-        {
-            Launch abc = list.get(i);
-            if(abc.getLaunchOutcome().equals(Launch.LaunchOutcome.SUCCESSFUL))
-            serviceList.add(abc.getLaunchServiceProvider());
-        }
+        /*Map<Launch.LaunchOutcome, Double> result = launches.stream()
+                .collect(
+                        Collectors.groupingBy(
+                                Launch::getLaunchOutcome,
+                                Collectors.collectingAndThen(
+                                        Collectors.mapping(Launch::getLaunchOutcome, Collectors.averagingDouble(Launch.LaunchOutcome -> {
+                                            return "SUCCESSFUL".equals(Launch.LaunchOutcome.SUCCESSFUL) ? 1:0;
+        })), avg -> String.format("%,0.f%%", avg*100))));*/
 
-        Comparator<Launch> launchComparator = (a, b) -> -a.getLaunchOutcome().compareTo(b.getLaunchOutcome());
-        return null;
-    }*/
+        Map<Launch.LaunchOutcome, List<Launch>> postsPerType = launches.stream().
+                collect(Collectors.groupingBy(Launch::getLaunchOutcome));
 
+        return lsp;
+    }
     /**
      * <p>
      * Returns the top-k most recent launches.

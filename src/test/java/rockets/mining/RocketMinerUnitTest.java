@@ -95,4 +95,25 @@ public class RocketMinerUnitTest {
         assertEquals(k, loadedLaunches.size());
         assertEquals(sortedLaunches.subList(0, k), loadedLaunches);
     }
+
+    @ParameterizedTest
+    @ValueSource(ints = {1,2,3})
+    public void shouldReturnTopMostLaunchedRockets(int k) {
+        when(dao.loadAll(Rocket.class)).thenReturn(rockets);
+        when(dao.loadAll(Launch.class)).thenReturn(launches);
+        List<Rocket> loadedRockets = miner.mostLaunchedRockets(k);
+        assertEquals(k, loadedRockets.size());
+        //assertEquals(sortedLaunches.subList(0, k), loadedLaunches);
+    }
+
+
+    /*@ParameterizedTest
+    @ValueSource(ints = {1,2,3})
+    public void shouldReturnTopMostMostReliableLaunchServiceProviders(int k) {
+        when(dao.loadAll(Rocket.class)).thenReturn(rockets);
+        List<LaunchServiceProvider> loadedRockets = miner.mostReliableLaunchServiceProviders(k);
+        //assertEquals(k, loadedRockets.size());
+        //assertEquals(sortedLaunches.subList(0, k), loadedLaunches);
+    }*/
+
 }
