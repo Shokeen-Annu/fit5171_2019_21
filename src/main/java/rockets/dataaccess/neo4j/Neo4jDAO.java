@@ -72,6 +72,12 @@ public class Neo4jDAO implements DAO {
                     .and(new Filter("type", EQUALS, pay.getType()))
                     .and(new Filter("weight", EQUALS, pay.getWeight()));
             collection = session.loadAll(Payload.class, filters);
+        }else if (clazz.equals(LspRevenue.class)) {
+            LspRevenue revenue = (LspRevenue) entity;
+            filters.add(new Filter("year", EQUALS, revenue.getYear()))
+                    .and(new Filter("revenue", EQUALS, revenue.getRevenue()))
+                    .and(new Filter("lsp", EQUALS, revenue.getLsp()));
+            collection = session.loadAll(LspRevenue.class, filters);
         }
         if (!collection.isEmpty()) {
             existingEntity = collection.iterator().next();
@@ -88,4 +94,9 @@ public class Neo4jDAO implements DAO {
     public <T extends Entity> void delete(T entity) {
         session.delete(entity);
     }
+
+    public <T extends Entity> Collection<T> loadWithFilter(Class<T> clazz,Filters filters) {
+        return session.loadAll(clazz,filters);
+    }
+
 }

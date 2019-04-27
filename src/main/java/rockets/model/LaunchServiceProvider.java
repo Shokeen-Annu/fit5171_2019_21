@@ -2,6 +2,7 @@ package rockets.model;
 
 import com.google.common.collect.Sets;
 
+import java.util.ArrayList;
 import java.util.Objects;
 import java.util.Set;
 import static org.apache.commons.lang3.Validate.notBlank;
@@ -18,11 +19,13 @@ public class LaunchServiceProvider extends Entity {
 
     private Set<Rocket> rockets;
 
+    private ArrayList<LspRevenue> revenue;
+
     public LaunchServiceProvider(String name, int yearFounded, String country) {
 
         notBlank(name,"constructor parameters cannot be empty or null strings");
         notBlank(country,"constructor parameters cannot be empty or null strings");
-        validateYearFounded(yearFounded);
+        validateYear(yearFounded);
 
         this.name = name;
         this.yearFounded = yearFounded;
@@ -47,6 +50,8 @@ public class LaunchServiceProvider extends Entity {
         return headquarters;
     }
 
+    public ArrayList<LspRevenue> getRevenue(){ return revenue;}
+
     public Set<Rocket> getRockets() {
         return rockets;
     }
@@ -56,7 +61,7 @@ public class LaunchServiceProvider extends Entity {
         this.name = name;}
 
     public void setYearFounded(int year){
-        validateYearFounded(year);
+        validateYear(year);
         this.yearFounded = year;
     }
 
@@ -69,6 +74,9 @@ public class LaunchServiceProvider extends Entity {
         this.headquarters = headquarters;
     }
 
+    public void setRevenue(ArrayList<LspRevenue> revenue){
+        this.revenue = revenue;
+    }
     public void setRockets(Set<Rocket> rockets) {
         notNull(rockets,"rockets cannot be null");
         this.rockets = rockets;
@@ -90,16 +98,5 @@ public class LaunchServiceProvider extends Entity {
         return Objects.hash(name, yearFounded, country);
     }
 
-    public void validateYearFounded(int year)
-    {
-        if(year <= 0)
-            throw new IllegalArgumentException("founded year cannot be negative or zero");
-        else
-        {
-            String yearString = Integer.toString(year);
-            if(yearString.length()!= 4)
-                throw  new IllegalArgumentException("Year Founded should be in YYYY format");
 
-        }
-    }
 }

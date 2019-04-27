@@ -38,4 +38,17 @@ public abstract class Entity {
         }
 
     }
+
+    public void validateYear(int year)
+    {
+        if(year <= 0)
+            throw new IllegalArgumentException("year cannot be negative or zero");
+        else
+        {
+            String yearString = Integer.toString(year);
+            if(yearString.length()!= 4)
+                throw  new IllegalArgumentException("Year should be in YYYY format");
+
+        }
+    }
 }

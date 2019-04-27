@@ -72,7 +72,7 @@ public class LaunchServiceProviderUnitTest {
     {
         IllegalArgumentException exception = assertThrows(IllegalArgumentException.class,
                 ()->target.setYearFounded(-1));
-        assertEquals("founded year cannot be negative or zero",exception.getMessage());
+        assertEquals("year cannot be negative or zero",exception.getMessage());
     }
 
     @DisplayName("Should throw exception when zero is passed to setYearFounded method")
@@ -81,7 +81,7 @@ public class LaunchServiceProviderUnitTest {
     {
         IllegalArgumentException exception = assertThrows(IllegalArgumentException.class,
                 ()->target.setYearFounded(0));
-        assertEquals("founded year cannot be negative or zero",exception.getMessage());
+        assertEquals("year cannot be negative or zero",exception.getMessage());
     }
 
     @DisplayName("Should throw exception when setYearFounded is not in YYYY format")
@@ -89,7 +89,7 @@ public class LaunchServiceProviderUnitTest {
     public void shouldThrowExceptionWhenSetYearFoundedWrongFormat()
     {
         IllegalArgumentException exception = assertThrows(IllegalArgumentException.class,()-> target.setYearFounded(89));
-        assertEquals("Year Founded should be in YYYY format",exception.getMessage());
+        assertEquals("Year should be in YYYY format",exception.getMessage());
     }
 
     @DisplayName("Should set Year Founded in YYYY format with correct input")
@@ -155,7 +155,7 @@ public class LaunchServiceProviderUnitTest {
     public void shouldThrowExceptionWhenConstructorPassedWithZeroToYearFounded()
     {
         IllegalArgumentException exception = assertThrows(IllegalArgumentException.class,()->new LaunchServiceProvider("W2M",0,"India"));
-        assertEquals("founded year cannot be negative or zero",exception.getMessage());
+        assertEquals("year cannot be negative or zero",exception.getMessage());
     }
 
     @DisplayName("Should throw exception if constructor is passed with negative value as founded year")
@@ -163,7 +163,7 @@ public class LaunchServiceProviderUnitTest {
     public void shouldThrowExceptionWhenConstructorPassedWithNegativeToYearFounded()
     {
         IllegalArgumentException exception = assertThrows(IllegalArgumentException.class,()->new LaunchServiceProvider("W2M",-1990,"India"));
-        assertEquals("founded year cannot be negative or zero",exception.getMessage());
+        assertEquals("year cannot be negative or zero",exception.getMessage());
     }
 
     @DisplayName("Should throw exception if constructor is passed with wrong format as founded year")
@@ -171,7 +171,7 @@ public class LaunchServiceProviderUnitTest {
     public void shouldThrowExceptionWhenConstructorPassedWithYearFoundedInWrongFormat()
     {
         IllegalArgumentException exception = assertThrows(IllegalArgumentException.class,()->new LaunchServiceProvider("W2M",89,"India"));
-        assertEquals("Year Founded should be in YYYY format",exception.getMessage());
+        assertEquals("Year should be in YYYY format",exception.getMessage());
     }
 
     @DisplayName("Should return false when null is passed to equals method")

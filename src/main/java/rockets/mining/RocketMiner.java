@@ -1,23 +1,35 @@
 package rockets.mining;
 
+import com.google.common.collect.Lists;
+import org.neo4j.graphdb.GraphDatabaseService;
+import org.neo4j.harness.TestServerBuilders;
+import org.neo4j.ogm.cypher.Filter;
+import org.neo4j.ogm.cypher.Filters;
+import org.neo4j.ogm.drivers.embedded.driver.EmbeddedDriver;
+import org.neo4j.ogm.session.Session;
+import org.neo4j.ogm.session.SessionFactory;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 import rockets.dataaccess.DAO;
-import rockets.model.Launch;
-import rockets.model.LaunchServiceProvider;
-import rockets.model.Rocket;
-
+import rockets.dataaccess.neo4j.Neo4jDAO;
+import rockets.model.*;
+import static org.apache.commons.lang3.Validate.notBlank;
 import java.math.BigDecimal;
 import java.util.*;
 import java.util.stream.Collectors;
 import java.util.ArrayList;
 import java.util.Iterator;
+import org.neo4j.harness.ServerControls;
+
+import static org.neo4j.ogm.cypher.ComparisonOperator.EQUALS;
 
 public class RocketMiner {
+
     private static Logger logger = LoggerFactory.getLogger(RocketMiner.class);
-
     private DAO dao;
-
+    private DAO sessionDao;
+    private Session session;
+    private SessionFactory sessionFactory;
     public RocketMiner(DAO dao) {
         this.dao = dao;
     }
@@ -84,7 +96,46 @@ public class RocketMiner {
      * @param orbit the orbit
      * @return the country who sends the most payload to the orbit
      */
-    public String dominantCountry(String orbit) { return null;}
+    public String dominantCountry(String orbit) {
+        notBlank(orbit,"orbit should not be null or empty");
+        Collection<Launch> launches=dao.loadAll(Launch.class);
+        HashMap<String,Integer> dictionary=new HashMap<String,Integer>();
+        Iterator<Launch> launchIterator = launches.iterator();
+        while(launchIterator.hasNext())
+        {
+            Launch launch = launchIterator.next();
+            String launchOrbit = launch.getOrbit().trim();
+            String country = launch.getLaunchVehicle().getCountry().trim().toLowerCase();
+            if(launchOrbit.equalsIgnoreCase(orbit.trim()))
+            {
+                if(dictionary.containsKey(country))
+                {
+                    int numberOfRockets = dictionary.get(country);
+                    numberOfRockets += 1;
+                    dictionary.replace(country,numberOfRockets);
+                }
+                else
+                    dictionary.put(country,1);
+            }
+
+        }
+
+        //Finding maximum rockets sent by a country
+        String maxCountry="";
+        int maxRockets=0;
+        Iterator<String> dicIterator = dictionary.keySet().iterator();
+        while(dicIterator.hasNext())
+        {
+            String country = dicIterator.next();
+            int rockets = dictionary.get(country);
+            if( rockets > maxRockets)
+            {
+                maxCountry = country;
+                maxRockets = rockets;
+            }
+        }
+        return maxCountry;
+    }
 
     /**
      * TODO: to be implemented & tested!
@@ -112,6 +163,67 @@ public class RocketMiner {
      * @return the list of k launch service providers who has the highest sales revenue.
      */
     public List<LaunchServiceProvider> highestRevenueLaunchServiceProviders(int k, int year) {
-        return null;
+
+        logger.info("find top "+k+" launch service providers with highest revenue");
+
+        if(k<=0)
+            throw new IllegalArgumentException("k should be greater than 0");
+
+        Collection<Launch> launches=dao.loadAll(Launch.class);
+        Collection<LspRevenue> revenueCollection = Lists.newArrayList();
+        Iterator<Launch> launchIterator = launches.iterator();
+        while(launchIterator.hasNext())
+        {
+            Launch launch = launchIterator.next();
+            if(launch.getLaunchDate().getYear()==year)
+            {
+                LaunchServiceProvider lsp = launch.getLaunchServiceProvider();
+                BigDecimal price = launch.getPrice();
+                ArrayList<LspRevenue> revenueArrayList=lsp.getRevenue();
+
+                if(revenueArrayList!=null)
+                {
+                    boolean flag = false;
+                    for(LspRevenue revenue: revenueArrayList)
+                    {
+                        if(revenue.getYear()==year) {
+                            if(revenueCollection.contains(revenue))
+                                revenueCollection.remove(revenue);
+                            revenue.addRevenue(price);
+                            revenueCollection.add(revenue);
+                            flag = true;
+                            logger.info(revenue.getLsp()+" : "+revenue.getRevenue());
+                        }
+                    }
+                    if(!flag)
+                    {
+                        ArrayList<LspRevenue> revList = new ArrayList<LspRevenue>();
+                        LspRevenue rev = new LspRevenue(year, price,lsp);
+                        revList.add(rev);
+                        lsp.setRevenue(revList);
+                        revenueCollection.add(rev);
+
+                    }
+                }
+                else {
+                    ArrayList<LspRevenue> revList = new ArrayList<LspRevenue>();
+                    LspRevenue rev = new LspRevenue(year, price,lsp);
+                    revList.add(rev);
+                    lsp.setRevenue(revList);
+                    revenueCollection.add(rev);
+                }
+            }
+        }
+
+       // Collection<LspRevenue> revenueCollection = sessionDao.loadAll(LspRevenue.class);
+        Comparator<LspRevenue> revenueComparator = (a, b) -> -a.getRevenue().compareTo(b.getRevenue());
+        List<LspRevenue> sortedRevenue = revenueCollection.stream().sorted(revenueComparator).limit(k).collect(Collectors.toList());
+        List<LaunchServiceProvider> lspList = new ArrayList<LaunchServiceProvider>();
+        for(LspRevenue revenue:sortedRevenue)
+        {
+            lspList.add(revenue.getLsp());
+        }
+
+        return lspList;
     }
 }
