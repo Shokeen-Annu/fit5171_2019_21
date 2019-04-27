@@ -44,12 +44,7 @@ public class RocketMiner {
         }
         Map<Rocket, Long> hashmap = r.stream().collect(Collectors.groupingBy(Rocket -> Rocket, Collectors.counting()));
         Map<Rocket, Long> sorted = hashmap .entrySet() .stream() .sorted(Collections.reverseOrder(Map.Entry.comparingByValue())) .collect( Collectors.toMap(Map.Entry::getKey, Map.Entry::getValue, (e1, e2) -> e2, LinkedHashMap::new));
-        System.out.println("map after sorting by values in descending order: " + sorted);
 
-        //Set<Entry<Rocket, Long>> entries = hashmap.entrySet();
-        //Comparator<Entry<Rocket, Long>> activeRocketsComparator = (a,b) -> -a.getValue().compareTo(b.getValue());
-        //List<Entry<Rocket, Long>> listOfEntries = new ArrayList<>(entries);
-        //Collections.sort(listOfEntries,activeRocketsComparator);
         List<Rocket> rockets = new ArrayList<>();
         for(Map.Entry<Rocket,Long> e: sorted.entrySet()){
             rockets.add(e.getKey());
@@ -70,22 +65,43 @@ public class RocketMiner {
 
     public List<LaunchServiceProvider> mostReliableLaunchServiceProviders(int k) {
         logger.info("find most reliable rockets " + k + " launches");
-        Collection<Launch> launches = dao.loadAll(Launch.class);
-        List<LaunchServiceProvider> lsp = new ArrayList<>();
+        Collection<Launch> launches1 = dao.loadAll(Launch.class);
+        Collection<LaunchServiceProvider> lsp = dao.loadAll(LaunchServiceProvider.class);
+        Map<LaunchServiceProvider, Double> hashmap = new HashMap<>();
+        List<LaunchServiceProvider> listOfLsp = new ArrayList<>();
 
-        /*Map<Launch.LaunchOutcome, Double> result = launches.stream()
-                .collect(
-                        Collectors.groupingBy(
-                                Launch::getLaunchOutcome,
-                                Collectors.collectingAndThen(
-                                        Collectors.mapping(Launch::getLaunchOutcome, Collectors.averagingDouble(Launch.LaunchOutcome -> {
-                                            return "SUCCESSFUL".equals(Launch.LaunchOutcome.SUCCESSFUL) ? 1:0;
-        })), avg -> String.format("%,0.f%%", avg*100))));*/
+        for(LaunchServiceProvider l: lsp) {
+            hashmap.put(l,0.00);
+        }
 
-        Map<Launch.LaunchOutcome, List<Launch>> postsPerType = launches.stream().
-                collect(Collectors.groupingBy(Launch::getLaunchOutcome));
+        for(Map.Entry<LaunchServiceProvider, Double> entry: hashmap.entrySet()) {
 
-        return lsp;
+            int successfull = 0;
+            int failed = 0;
+            double perSucc = 0.0;
+
+            for(Launch l: launches1) {
+
+                if(l.getLaunchServiceProvider().equals(entry.getKey())) {
+
+                    if(l.getLaunchOutcome().equals(Launch.LaunchOutcome.SUCCESSFUL))
+                        successfull++;
+                    else
+                        failed++;
+                }
+            }
+            int total = successfull+failed;
+            if(total!=0)
+                perSucc = ((double)successfull/total)*100;
+
+            entry.setValue(perSucc);
+        }
+        Map<LaunchServiceProvider, Double> sorted = hashmap .entrySet() .stream() .sorted(Collections.reverseOrder(Map.Entry.comparingByValue())) .collect( Collectors.toMap(Map.Entry::getKey, Map.Entry::getValue, (e1, e2) -> e2, LinkedHashMap::new));
+
+        for(Map.Entry<LaunchServiceProvider, Double> entry: sorted.entrySet()) {
+            listOfLsp.add(entry.getKey());
+        }
+        return listOfLsp.stream().limit(k).collect(Collectors.toList());
     }
     /**
      * <p>
