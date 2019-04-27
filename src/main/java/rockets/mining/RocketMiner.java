@@ -1,13 +1,7 @@
 package rockets.mining;
 
 import com.google.common.collect.Lists;
-import org.neo4j.graphdb.GraphDatabaseService;
-import org.neo4j.harness.TestServerBuilders;
-import org.neo4j.ogm.cypher.Filter;
-import org.neo4j.ogm.cypher.Filters;
-import org.neo4j.ogm.drivers.embedded.driver.EmbeddedDriver;
-import org.neo4j.ogm.session.Session;
-import org.neo4j.ogm.session.SessionFactory;
+import org.neo4j.cypher.internal.frontend.v3_2.phases.Do;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 import rockets.dataaccess.DAO;
@@ -15,9 +9,17 @@ import rockets.dataaccess.neo4j.Neo4jDAO;
 import rockets.model.*;
 import static org.apache.commons.lang3.Validate.notBlank;
 import java.math.BigDecimal;
+import rockets.model.Launch;
+import rockets.model.LaunchServiceProvider;
+import rockets.model.Rocket;
+
+
 import java.util.*;
 import java.util.stream.Collectors;
 import java.util.ArrayList;
+import java.util.Map.Entry;
+import java.util.Set;
+
 import java.util.Iterator;
 import org.neo4j.harness.ServerControls;
 
@@ -26,10 +28,9 @@ import static org.neo4j.ogm.cypher.ComparisonOperator.EQUALS;
 public class RocketMiner {
 
     private static Logger logger = LoggerFactory.getLogger(RocketMiner.class);
+
     private DAO dao;
-    private DAO sessionDao;
-    private Session session;
-    private SessionFactory sessionFactory;
+
     public RocketMiner(DAO dao) {
         this.dao = dao;
     }
@@ -42,8 +43,25 @@ public class RocketMiner {
      * @return the list of k most active rockets.
     */
     public List<Rocket> mostLaunchedRockets(int k) {
-        return null;
+        logger.info("find most launched rockets " + k + " launches");
+        Collection<Launch> launches = dao.loadAll(Launch.class);
+        List<Rocket> r = new ArrayList<>();
+
+        for(Launch l: launches) {
+            if(l.getLaunchDate() != null) {
+                r.add(l.getLaunchVehicle());
+            }
+        }
+        Map<Rocket, Long> hashmap = r.stream().collect(Collectors.groupingBy(Rocket -> Rocket, Collectors.counting()));
+        Map<Rocket, Long> sorted = hashmap .entrySet() .stream() .sorted(Collections.reverseOrder(Map.Entry.comparingByValue())) .collect( Collectors.toMap(Map.Entry::getKey, Map.Entry::getValue, (e1, e2) -> e2, LinkedHashMap::new));
+
+        List<Rocket> rockets = new ArrayList<>();
+        for(Map.Entry<Rocket,Long> e: sorted.entrySet()){
+            rockets.add(e.getKey());
+        }
+        return rockets.stream().limit(k).collect(Collectors.toList());
     }
+
 
     /*
      * TODO: to be implemented & tested!
@@ -54,26 +72,47 @@ public class RocketMiner {
      * @param k the number of launch service providers to be returned.
      * @return the list of k most reliable ones.
      */
-    /**
-    public List<LaunchServiceProvider> mostReliableLaunchServiceProviders(int k) {
-        logger.info("find most launched rockets " + k + " launches");
-        Collection<Launch> launches = dao.loadAll(Launch.class);
-        Collection<LaunchServiceProvider> launcheService = dao.loadAll(LaunchServiceProvider.class);
-        List<launches> list = new ArrayList<>();
-        List<LaunchServiceProvider> serviceList = new ArrayList<>();
-        Iterator iterator = list.iterator();
 
-        for(int i = 0; i<list.size(); i++)
-        {
-            Launch abc = list.get(i);
-            if(abc.getLaunchOutcome().equals(Launch.LaunchOutcome.SUCCESSFUL))
-            serviceList.add(abc.getLaunchServiceProvider());
+    public List<LaunchServiceProvider> mostReliableLaunchServiceProviders(int k) {
+        logger.info("find most reliable rockets " + k + " launches");
+        Collection<Launch> launches1 = dao.loadAll(Launch.class);
+        Collection<LaunchServiceProvider> lsp = dao.loadAll(LaunchServiceProvider.class);
+        Map<LaunchServiceProvider, Double> hashmap = new HashMap<>();
+        List<LaunchServiceProvider> listOfLsp = new ArrayList<>();
+
+        for(LaunchServiceProvider l: lsp) {
+            hashmap.put(l,0.00);
         }
 
-        Comparator<Launch> launchComparator = (a, b) -> -a.getLaunchOutcome().compareTo(b.getLaunchOutcome());
-        return null;
-    }*/
+        for(Map.Entry<LaunchServiceProvider, Double> entry: hashmap.entrySet()) {
 
+            int successfull = 0;
+            int failed = 0;
+            double perSucc = 0.0;
+
+            for(Launch l: launches1) {
+
+                if(l.getLaunchServiceProvider().equals(entry.getKey())) {
+
+                    if(l.getLaunchOutcome().equals(Launch.LaunchOutcome.SUCCESSFUL))
+                        successfull++;
+                    else
+                        failed++;
+                }
+            }
+            int total = successfull+failed;
+            if(total!=0)
+                perSucc = ((double)successfull/total)*100;
+
+            entry.setValue(perSucc);
+        }
+        Map<LaunchServiceProvider, Double> sorted = hashmap .entrySet() .stream() .sorted(Collections.reverseOrder(Map.Entry.comparingByValue())) .collect( Collectors.toMap(Map.Entry::getKey, Map.Entry::getValue, (e1, e2) -> e2, LinkedHashMap::new));
+
+        for(Map.Entry<LaunchServiceProvider, Double> entry: sorted.entrySet()) {
+            listOfLsp.add(entry.getKey());
+        }
+        return listOfLsp.stream().limit(k).collect(Collectors.toList());
+    }
     /**
      * <p>
      * Returns the top-k most recent launches.
