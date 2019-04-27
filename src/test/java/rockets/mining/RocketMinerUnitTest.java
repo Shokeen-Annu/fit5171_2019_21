@@ -76,7 +76,6 @@ public class RocketMinerUnitTest {
             Launch l = new Launch();
             l.setLaunchDate(LocalDate.of(2017, months[i], 1));
             l.setLaunchVehicle(rockets.get(rocketIndex[i]));
-            l.setLaunchServiceProvider(rockets.get(rocketIndex[i]).getManufacturer());
             l.setLaunchSite("VAFB");
             l.setOrbit("LEO");
             l.setPrice(launchPrice[i]);
@@ -174,7 +173,7 @@ public class RocketMinerUnitTest {
     public void shouldReturnTopLSPWithHighestRevenueForValidK(int k) {
         when(dao.loadAll(Launch.class)).thenReturn(launches);
         List mockedTopLSPList=mock(List.class);
-        LaunchServiceProvider mockLsp1 = new LaunchServiceProvider("ULA", 1990, "USA");
+        LaunchServiceProvider mockLsp1 = new LaunchServiceProvider("ESA", 1975, "Europe ");
 
         when(mockedTopLSPList.get(0)).thenReturn(mockLsp1);
         List<LaunchServiceProvider> loadedLsps = miner.highestRevenueLaunchServiceProviders(k,2017);
