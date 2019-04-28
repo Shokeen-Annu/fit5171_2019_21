@@ -9,6 +9,7 @@ import org.junit.jupiter.params.provider.ValueSource;
 
 import java.math.BigDecimal;
 import java.time.LocalDate;
+import java.util.ArrayList;
 
 import static org.junit.jupiter.api.Assertions.*;
 public class LaunchUnitTest {
@@ -212,5 +213,28 @@ public class LaunchUnitTest {
         assertFalse(target.equals(launch));
     }
 
+    @DisplayName("Integration testing for payload attribute")
+    @Test
+    public void shouldContainPayloadObjectWhenAddedToLaunchObject()
+    {
+        ArrayList<Payload> payloads=new ArrayList<Payload>();
+        Payload pay1=new Payload();
+        pay1.setWeight(345.5);
+        pay1.setName("SkyLab");
+        pay1.setType(Payload.TypeOfPayload.satellite);
+        payloads.add(pay1);
+
+
+        LaunchServiceProvider serviceProvider = new LaunchServiceProvider("Antrix",1992,"India");
+        Rocket rocket = new Rocket("W2M","India",serviceProvider);
+        target.setLaunchDate(LocalDate.of(2002,9,27));
+        target.setLaunchVehicle(rocket);
+        target.setLaunchServiceProvider(serviceProvider);
+        target.setOrbit("Geostationary orbit");
+        target.setPayload(payloads);
+
+        assertEquals(target.getPayload(),payloads);
+        assertEquals(target.getPayload().size(),payloads.size());
+    }
 
 }
