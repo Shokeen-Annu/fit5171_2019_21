@@ -3,6 +3,7 @@ package rockets.model;
 import com.google.common.collect.Sets;
 
 import java.util.ArrayList;
+import java.util.List;
 import java.util.Objects;
 import java.util.Set;
 import static org.apache.commons.lang3.Validate.notBlank;
@@ -19,7 +20,7 @@ public class LaunchServiceProvider extends Entity {
 
     private Set<Rocket> rockets;
 
-    private ArrayList<LspRevenue> revenue;
+    private List<LspRevenue> revenue=new ArrayList<>();
 
     public LaunchServiceProvider(String name, int yearFounded, String country) {
 
@@ -50,7 +51,7 @@ public class LaunchServiceProvider extends Entity {
         return headquarters;
     }
 
-    public ArrayList<LspRevenue> getRevenue(){ return revenue;}
+    public List<LspRevenue> getRevenue(){ return revenue;}
 
     public Set<Rocket> getRockets() {
         return rockets;
@@ -74,7 +75,7 @@ public class LaunchServiceProvider extends Entity {
         this.headquarters = headquarters;
     }
 
-    public void setRevenue(ArrayList<LspRevenue> revenue){
+    public void setRevenue(List<LspRevenue> revenue){
         this.revenue = revenue;
     }
     public void setRockets(Set<Rocket> rockets) {

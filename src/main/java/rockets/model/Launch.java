@@ -3,6 +3,7 @@ package rockets.model;
 import java.math.BigDecimal;
 import java.time.LocalDate;
 import java.util.ArrayList;
+import java.util.List;
 import java.util.Objects;
 import static org.apache.commons.lang3.Validate.notBlank;
 import static org.apache.commons.lang3.Validate.notNull;
@@ -18,7 +19,7 @@ public class  Launch extends Entity {
 
     private LaunchServiceProvider launchServiceProvider;
 
-    private ArrayList<Payload> payload;
+    private List<Payload> payload = new ArrayList<>();
 
     private String launchSite;
 
@@ -60,11 +61,11 @@ public class  Launch extends Entity {
         this.launchServiceProvider = launchServiceProvider;
     }
 
-    public ArrayList<Payload> getPayload() {
+    public List<Payload> getPayload() {
         return payload;
     }
 
-    public void setPayload(ArrayList<Payload> payload)
+    public void setPayload(List<Payload> payload)
     {
         notNull(payload,"payload cannot be null");
         this.payload = payload;

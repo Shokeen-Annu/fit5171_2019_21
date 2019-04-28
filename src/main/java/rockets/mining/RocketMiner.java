@@ -193,7 +193,7 @@ public class RocketMiner {
             {
                 LaunchServiceProvider lsp = launch.getLaunchServiceProvider();
                 BigDecimal price = launch.getPrice();
-                ArrayList<LspRevenue> revenueArrayList=lsp.getRevenue();
+                List<LspRevenue> revenueArrayList=lsp.getRevenue();
 
                 if(revenueArrayList!=null)
                 {
