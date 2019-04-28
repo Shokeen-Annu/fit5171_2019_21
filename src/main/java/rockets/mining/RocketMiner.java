@@ -11,6 +11,7 @@ import rockets.model.Rocket;
 
 
 import java.util.*;
+import java.util.function.Function;
 import java.util.stream.Collectors;
 import java.util.ArrayList;
 
@@ -40,7 +41,7 @@ public class RocketMiner {
                 r.add(l.getLaunchVehicle());
             }
         }
-        Map<Rocket, Long> hashmap = r.stream().collect(Collectors.groupingBy(Rocket -> Rocket, Collectors.counting()));
+        Map<Rocket, Long> hashmap = r.stream().collect(Collectors.groupingBy(Function.identity(), Collectors.counting()));
         Map<Rocket, Long> sorted = hashmap .entrySet() .stream() .sorted(Collections.reverseOrder(Map.Entry.comparingByValue())) .collect( Collectors.toMap(Map.Entry::getKey, Map.Entry::getValue, (e1, e2) -> e2, LinkedHashMap::new));
 
         List<Rocket> rockets = new ArrayList<>();
