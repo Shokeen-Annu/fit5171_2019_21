@@ -1,7 +1,6 @@
 package rockets.mining;
 
 import com.google.common.collect.Lists;
-import org.neo4j.cypher.internal.frontend.v2_3.ast.functions.Str;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 import rockets.dataaccess.DAO;
@@ -40,7 +39,7 @@ public class RocketMiner {
      * @return the list of k most active rockets.
     */
     public List<Rocket> mostLaunchedRockets(int k) {
-        logger.info(String.format("find most launched rockets {0} {1}",k,launches));
+        logger.info(String.format("find most launched rockets %d %s",k,launches));
         Collection<Launch> launchesList = dao.loadAll(Launch.class);
         List<Rocket> r = new ArrayList<>();
 
@@ -71,7 +70,7 @@ public class RocketMiner {
      */
 
     public List<LaunchServiceProvider> mostReliableLaunchServiceProviders(int k) {
-        logger.info(String.format("find most reliable rockets {0} {1}" ,k,launches));
+        logger.info(String.format("find most reliable rockets %d %s" ,k,launches));
         Collection<Launch> launches1 = dao.loadAll(Launch.class);
         Collection<LaunchServiceProvider> lsp = dao.loadAll(LaunchServiceProvider.class);
         Map<LaunchServiceProvider, Double> hashmap = new HashMap<>();
@@ -118,7 +117,7 @@ public class RocketMiner {
      * @return the list of k most recent launches.
      */
     public List<Launch> mostRecentLaunches(int k) {
-        logger.info(String.format("find most recent {0} {1}",k,launches));
+        logger.info(String.format("find most recent %d %s",k,launches));
         Collection<Launch> launchesList = dao.loadAll(Launch.class);
         Comparator<Launch> launchDateComparator = (a, b) -> -a.getLaunchDate().compareTo(b.getLaunchDate());
         return launchesList.stream().sorted(launchDateComparator).limit(k).collect(Collectors.toList());
@@ -133,7 +132,7 @@ public class RocketMiner {
      * @return the country who sends the most payload to the orbit
      */
     public String dominantCountry(String orbit) {
-        logger.info(String.format("Dominant country who launched most rockets"));
+        logger.info("Dominant country who launched most rockets");
         notBlank(orbit,"orbit should not be null or empty");
         Collection<Launch> launchesList=dao.loadAll(Launch.class);
         HashMap<String,Integer> dictionary=new HashMap<>();
@@ -183,7 +182,7 @@ public class RocketMiner {
      * @return the list of k most expensive launches.
      */
     public List<Launch> mostExpensiveLaunches(int k) {
-        logger.info(String.format("find most expensive {0} {1}" ,k ,launches));
+        logger.info(String.format("find most expensive %d %s" ,k ,launches));
         Collection<Launch> launchesList = dao.loadAll(Launch.class);
         Comparator<Launch> launchPriceComparator = (a, b) -> -a.getPrice().compareTo(b.getPrice());
         return launchesList.stream().sorted(launchPriceComparator).limit(k).collect(Collectors.toList());
@@ -201,7 +200,7 @@ public class RocketMiner {
      */
     public List<LaunchServiceProvider> highestRevenueLaunchServiceProviders(int k, int year) {
 
-        logger.info(String.format("find top {0} launch service providers with highest revenue",k));
+        logger.info(String.format("find top %d launch service providers with highest revenue",k));
 
         if(k<=0)
             throw new IllegalArgumentException("k should be greater than 0");
