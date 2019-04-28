@@ -11,6 +11,7 @@ import org.neo4j.ogm.session.SessionFactory;
 import rockets.dataaccess.DAO;
 import rockets.model.*;
 
+import java.math.BigDecimal;
 import java.time.LocalDate;
 import java.util.Collection;
 import java.util.Set;
@@ -26,6 +27,7 @@ public class Neo4jDAOUnitTest {
     private LaunchServiceProvider esa;
     private LaunchServiceProvider spacex;
     private Rocket rocket;
+    private LspRevenue rev;
 
     @BeforeAll
     public void initializeNeo4j() {
@@ -42,6 +44,7 @@ public class Neo4jDAOUnitTest {
         esa = new LaunchServiceProvider("ESA", 1970, "Europe");
         spacex = new LaunchServiceProvider("SpaceX", 2002, "USA");
         rocket = new Rocket("F9", "USA", spacex);
+        rev = new LspRevenue(2008, new BigDecimal(25000),spacex);
     }
 
     @Test
@@ -163,6 +166,29 @@ public class Neo4jDAOUnitTest {
         assertTrue(dao.loadAll(Rocket.class).isEmpty());
         assertFalse(dao.loadAll(LaunchServiceProvider.class).isEmpty());
     }
+
+    @Test
+    public void shouldDeleteRevenueWithoutLSP() {
+        dao.createOrUpdate(rev);
+        assertNotNull(rev.getId());
+        assertNotNull(rev.getLsp().getId());
+        assertFalse(dao.loadAll(LspRevenue.class).isEmpty());
+        assertFalse(dao.loadAll(LaunchServiceProvider.class).isEmpty());
+        dao.delete(rev);
+        assertTrue(dao.loadAll(LspRevenue.class).isEmpty());
+        assertFalse(dao.loadAll(LaunchServiceProvider.class).isEmpty());
+    }
+
+
+    @Test
+    public void shouldDeleteLspRevenue() {
+        dao.createOrUpdate(rev);
+        assertNotNull(rev.getId());
+        assertFalse(dao.loadAll(LspRevenue.class).isEmpty());
+        dao.delete(rev);
+        assertTrue(dao.loadAll(LspRevenue.class).isEmpty());
+    }
+
 
     @Test
     public void shouldDeletePayload() {
