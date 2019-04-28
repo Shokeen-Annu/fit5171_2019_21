@@ -20,12 +20,8 @@ import java.util.Iterator;
 
 public class RocketMiner {
 
-    private static Logger logger = LoggerFactory.getLogger(RocketMiner.class);
 
     private DAO dao;
-
-    //Resolving SonarQube code smells
-    private String launches=" launches";
 
     public RocketMiner(DAO dao) {
         this.dao = dao;
@@ -39,7 +35,6 @@ public class RocketMiner {
      * @return the list of k most active rockets.
     */
     public List<Rocket> mostLaunchedRockets(int k) {
-        //logger.info(String.format("find most launched rockets %d %s",k,launches));
         Collection<Launch> launchesList = dao.loadAll(Launch.class);
         List<Rocket> r = new ArrayList<>();
 
@@ -70,7 +65,6 @@ public class RocketMiner {
      */
 
     public List<LaunchServiceProvider> mostReliableLaunchServiceProviders(int k) {
-        //logger.info(String.format("find most reliable rockets %d %s" ,k,launches));
         Collection<Launch> launches1 = dao.loadAll(Launch.class);
         Collection<LaunchServiceProvider> lsp = dao.loadAll(LaunchServiceProvider.class);
         Map<LaunchServiceProvider, Double> hashmap = new HashMap<>();
@@ -132,7 +126,6 @@ public class RocketMiner {
      * @return the country who sends the most payload to the orbit
      */
     public String dominantCountry(String orbit) {
-        //logger.info("Dominant country who launched most rockets");
         notBlank(orbit,"orbit should not be null or empty");
         Collection<Launch> launchesList=dao.loadAll(Launch.class);
         HashMap<String,Integer> dictionary=new HashMap<>();
@@ -182,7 +175,6 @@ public class RocketMiner {
      * @return the list of k most expensive launches.
      */
     public List<Launch> mostExpensiveLaunches(int k) {
-        //logger.info(String.format("find most expensive %d %s" ,k ,launches));
         Collection<Launch> launchesList = dao.loadAll(Launch.class);
         Comparator<Launch> launchPriceComparator = (a, b) -> -a.getPrice().compareTo(b.getPrice());
         return launchesList.stream().sorted(launchPriceComparator).limit(k).collect(Collectors.toList());
@@ -199,8 +191,6 @@ public class RocketMiner {
      * @return the list of k launch service providers who has the highest sales revenue.
      */
     public List<LaunchServiceProvider> highestRevenueLaunchServiceProviders(int k, int year) {
-
-        //logger.info(String.format("find top %d launch service providers with highest revenue",k));
 
         if(k<=0)
             throw new IllegalArgumentException("k should be greater than 0");
