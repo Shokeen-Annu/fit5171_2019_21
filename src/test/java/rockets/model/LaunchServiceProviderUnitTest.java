@@ -7,6 +7,12 @@ import org.junit.jupiter.api.Test;
 import org.junit.jupiter.params.ParameterizedTest;
 import org.junit.jupiter.params.provider.ValueSource;
 
+import java.math.BigDecimal;
+import java.time.LocalDate;
+import java.util.ArrayList;
+import java.util.HashSet;
+import java.util.Set;
+
 import static org.junit.jupiter.api.Assertions.*;
 
 public class LaunchServiceProviderUnitTest {
@@ -207,5 +213,36 @@ public class LaunchServiceProviderUnitTest {
         assertFalse(serviceProvider1.equals(serviceProvider2));
     }
 
+    @DisplayName("Integration testing for rockets attribute")
+    @Test
+    public void shouldContainRocketObjectWhenAddedToLaunchServiceProviderObject()
+    {
+        Set<Rocket> rockets = new HashSet<Rocket>();
+        String name = "BFR";
+        String country = "USA";
+        LaunchServiceProvider manufacturer = new LaunchServiceProvider("SpaceX", 2002, "USA");
+        Rocket rocket = new Rocket(name, country, manufacturer);
+        rockets.add(rocket);
 
+        target.setRockets(rockets);
+
+        assertEquals(target.getRockets(),rockets);
+        assertEquals(target.getRockets().size(),rockets.size());
+    }
+
+
+    @DisplayName("Integration testing for revenue attribute")
+    @Test
+    public void shouldContainLspRevenueObjectWhenAddedToLaunchServiceProviderObject()
+    {
+        ArrayList<LspRevenue> revenueList = new ArrayList<LspRevenue>();
+        LspRevenue revenue = new LspRevenue(2017,new BigDecimal(3000.43),target);
+        revenueList.add(revenue);
+
+        target.setRevenue(revenueList);
+
+        assertEquals(target.getRevenue(),revenueList);
+        assertEquals(target.getRevenue().size(),revenueList.size());
+        assertEquals(revenueList.get(0).getLsp(),target);
+    }
 }
