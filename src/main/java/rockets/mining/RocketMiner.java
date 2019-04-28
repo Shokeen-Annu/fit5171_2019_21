@@ -1,6 +1,5 @@
 package rockets.mining;
 
-import com.google.common.collect.Lists;
 import rockets.dataaccess.DAO;
 import rockets.model.*;
 import static org.apache.commons.lang3.Validate.notBlank;
@@ -191,43 +190,26 @@ public class RocketMiner {
         while(launchIterator.hasNext())
         {
             Launch launch = launchIterator.next();
-            if(launch.getLaunchDate().getYear()==year)
-            {
+            if(launch.getLaunchDate().getYear()==year) {
                 LaunchServiceProvider lsp = launch.getLaunchServiceProvider();
                 BigDecimal price = launch.getPrice();
-                LspRevenue localRevenue = new LspRevenue(year,price,lsp);
+                LspRevenue localRevenue = new LspRevenue(year, price, lsp);
 
-                if(revenueCollection!=null)
-                {
-                    boolean flag = false;
-                    for(LspRevenue revenue: revenueCollection)
-                    {
-                        if(revenue.equals(localRevenue)) {
-                            revenue.addRevenue(price);
-                            flag = true;
-
-                        }
-                    }
-                    if(!flag)
-                    {
-                        LspRevenue rev = new LspRevenue(year, price,lsp);
-                        revenueCollection.add(rev);
+                boolean flag = false;
+                for (LspRevenue revenue : revenueCollection) {
+                    if (revenue.equals(localRevenue)) {
+                        revenue.addRevenue(price);
+                        flag = true;
                     }
                 }
-                else {
-                    LspRevenue rev = new LspRevenue(year, price,lsp);
+                if (!flag) {
+                    LspRevenue rev = new LspRevenue(year, price, lsp);
                     revenueCollection.add(rev);
                 }
             }
         }
-
         Comparator<LspRevenue> revenueComparator = (a, b) -> -a.getRevenue().compareTo(b.getRevenue());
-        List<LspRevenue> sortedRevenue = revenueCollection.stream().sorted(revenueComparator).limit(k).collect(Collectors.toList());
-        List<LaunchServiceProvider> lspList = new ArrayList<>();
-        for(LspRevenue revenue:sortedRevenue)
-        {
-            lspList.add(revenue.getLsp());
-        }
+        List<LaunchServiceProvider> lspList = revenueCollection.stream().sorted(revenueComparator).limit(k).map(LspRevenue::getLsp).collect(Collectors.toList());
 
         return lspList;
     }
