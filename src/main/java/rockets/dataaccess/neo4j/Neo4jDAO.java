@@ -89,7 +89,7 @@ public class Neo4jDAO implements DAO {
         return session.loadAll(clazz);
     }
 
-    // TODO: need to be tested!
+
     public <T extends Entity> void delete(T entity) {
         session.delete(entity);
     }
