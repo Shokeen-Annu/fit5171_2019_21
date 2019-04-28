@@ -1,8 +1,6 @@
 package rockets.mining;
 
 import com.google.common.collect.Lists;
-import org.slf4j.Logger;
-import org.slf4j.LoggerFactory;
 import rockets.dataaccess.DAO;
 import rockets.model.*;
 import static org.apache.commons.lang3.Validate.notBlank;
@@ -28,7 +26,6 @@ public class RocketMiner {
     }
 
     /**
-     * TODO: to be implemented & tested!
      * Returns the top-k most active rockets, as measured by number of completed launches.
      *
      * @param k the number of rockets to be returned.
@@ -55,7 +52,6 @@ public class RocketMiner {
 
 
     /*
-     * TODO: to be implemented & tested!
      * <p>
      * Returns the top-k most reliable launch service providers as measured
      * by percentage of successful launches.
@@ -104,22 +100,18 @@ public class RocketMiner {
         return listOfLsp.stream().limit(k).collect(Collectors.toList());
     }
     /**
-     * <p>
      * Returns the top-k most recent launches.
      *
      * @param k the number of launches to be returned.
      * @return the list of k most recent launches.
      */
     public List<Launch> mostRecentLaunches(int k) {
-        //logger.info(String.format("find most recent %d %s",k,launches));
         Collection<Launch> launchesList = dao.loadAll(Launch.class);
         Comparator<Launch> launchDateComparator = (a, b) -> -a.getLaunchDate().compareTo(b.getLaunchDate());
         return launchesList.stream().sorted(launchDateComparator).limit(k).collect(Collectors.toList());
     }
 
     /**
-     * TODO: to be implemented & tested!
-     * <p>
      * Returns the dominant country who has the most launched rockets in an orbit.
      *
      * @param orbit the orbit
@@ -167,8 +159,6 @@ public class RocketMiner {
     }
 
     /**
-     * TODO: to be implemented & tested!
-     * <p>
      * Returns the top-k most expensive launches.
      *
      * @param k the number of launches to be returned.
@@ -181,8 +171,6 @@ public class RocketMiner {
     }
 
     /**
-     * TODO: to be implemented & tested!
-     * <p>
      * Returns a list of launch service provider that has the top-k highest
      * sales revenue in a year.
      *

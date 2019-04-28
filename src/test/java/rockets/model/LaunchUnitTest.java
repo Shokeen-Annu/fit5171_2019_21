@@ -221,7 +221,7 @@ public class LaunchUnitTest {
         Payload pay1=new Payload();
         pay1.setWeight(345.5);
         pay1.setName("SkyLab");
-        pay1.setType(Payload.TypeOfPayload.satellite);
+        pay1.setType(Payload.TypeOfPayload.SATELLITE);
         payloads.add(pay1);
 
 

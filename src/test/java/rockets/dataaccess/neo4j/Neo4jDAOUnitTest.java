@@ -198,7 +198,7 @@ public class Neo4jDAOUnitTest {
     public void shouldDeletePayload() {
         Payload pay = new Payload();
         pay.setName("abc");
-        pay.setType(Payload.TypeOfPayload.satellite);
+        pay.setType(Payload.TypeOfPayload.SATELLITE);
         pay.setWeight(3200.00);
         dao.createOrUpdate(pay);
         assertNotNull(pay.getId());

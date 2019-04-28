@@ -7,10 +7,10 @@ public class Payload extends Entity {
 
     public enum TypeOfPayload
     {
-        satellite,
-        spaceProbe,
-        crewedSpaceCraft,
-        others
+        SATELLITE,
+        SPACEPROBE,
+        CREWEDSPACECRAFT,
+        OTHERS
     }
     private TypeOfPayload type;
     private double weight;
