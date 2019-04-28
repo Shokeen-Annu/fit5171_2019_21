@@ -193,37 +193,27 @@ public class RocketMiner {
             {
                 LaunchServiceProvider lsp = launch.getLaunchServiceProvider();
                 BigDecimal price = launch.getPrice();
-                List<LspRevenue> revenueArrayList=lsp.getRevenue();
+                LspRevenue localRevenue = new LspRevenue(year,price,lsp);
 
-                if(revenueArrayList!=null)
+                if(revenueCollection!=null)
                 {
                     boolean flag = false;
-                    for(LspRevenue revenue: revenueArrayList)
+                    for(LspRevenue revenue: revenueCollection)
                     {
-                        if(revenue.getYear()==year) {
-                            if(revenueCollection.contains(revenue))
-                                revenueCollection.remove(revenue);
+                        if(revenue.equals(localRevenue)) {
                             revenue.addRevenue(price);
-                            revenueCollection.add(revenue);
                             flag = true;
 
                         }
                     }
                     if(!flag)
                     {
-                        ArrayList<LspRevenue> revList = new ArrayList<>();
                         LspRevenue rev = new LspRevenue(year, price,lsp);
-                        revList.add(rev);
-                        lsp.setRevenue(revList);
                         revenueCollection.add(rev);
-
                     }
                 }
                 else {
-                    ArrayList<LspRevenue> revList = new ArrayList<>();
                     LspRevenue rev = new LspRevenue(year, price,lsp);
-                    revList.add(rev);
-                    lsp.setRevenue(revList);
                     revenueCollection.add(rev);
                 }
             }
