@@ -185,7 +185,8 @@ public class RocketMiner {
             throw new IllegalArgumentException("k should be greater than 0");
 
         Collection<Launch> launchesList=dao.loadAll(Launch.class);
-        Collection<LspRevenue> revenueCollection = Lists.newArrayList();
+        Collection<LspRevenue> revenueCollection = new ArrayList<>();
+
         Iterator<Launch> launchIterator = launchesList.iterator();
         while(launchIterator.hasNext())
         {
