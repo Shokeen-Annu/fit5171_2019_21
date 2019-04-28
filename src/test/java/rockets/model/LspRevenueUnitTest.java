@@ -7,7 +7,6 @@ import org.junit.jupiter.params.ParameterizedTest;
 import org.junit.jupiter.params.provider.ValueSource;
 
 import java.math.BigDecimal;
-import java.time.LocalDate;
 
 import static org.junit.jupiter.api.Assertions.*;
 import static org.junit.jupiter.api.Assertions.assertFalse;
@@ -15,11 +14,13 @@ import static org.junit.jupiter.api.Assertions.assertFalse;
 public class LspRevenueUnitTest {
 
     private LspRevenue target;
+    private LaunchServiceProvider provider;
 
     @BeforeEach
     public void setUp()
     {
-        target = new LspRevenue(2017,new BigDecimal(2.33),new LaunchServiceProvider("SpaceX",2002,"USA"));
+        provider = new LaunchServiceProvider("SpaceX",2002,"USA");
+        target = new LspRevenue(2017,new BigDecimal(2.33),provider);
     }
 
     @DisplayName("Should throw exception when null is passed to setLsp method")
@@ -104,5 +105,39 @@ public class LspRevenueUnitTest {
         LspRevenue revenue1 = new LspRevenue(2017,new BigDecimal(2.33),serviceProvider);
         LspRevenue revenue2 = new LspRevenue(2018,new BigDecimal(2.33),serviceProvider);
         assertFalse(revenue1.equals(revenue2));
+    }
+
+    @DisplayName("Should throw exception when null is passed to lsp parameter of constructor")
+    @Test
+    public void shouldThrowExceptionWhenLspToNullInConstructor()
+    {
+        NullPointerException exception = assertThrows(NullPointerException.class,()->new LspRevenue(2018,new BigDecimal(32.2),null));
+        assertEquals("Launch service provider cannot be null",exception.getMessage());
+    }
+
+    @DisplayName("Should throw exception when null is passed to revenue parameter of constructor")
+    @Test
+    public void shouldThrowExceptionWhenRevenueToNullInConstructor()
+    {
+        NullPointerException exception = assertThrows(NullPointerException.class,()->new LspRevenue(2018,null,provider));
+        assertEquals("Revenue cannot be null",exception.getMessage());
+    }
+
+    @DisplayName("Should throw exception when negative or zero is passed to year parameter of constructor")
+    @ParameterizedTest
+    @ValueSource(ints = {-1,0})
+    public void shouldThrowExceptionWhenYearToNegativeOrZeroInConstructor(int arg)
+    {
+        IllegalArgumentException exception = assertThrows(IllegalArgumentException.class,()->new LspRevenue(arg,new BigDecimal(34.8),provider));
+        assertEquals("year cannot be negative or zero",exception.getMessage());
+    }
+
+    @DisplayName("Should throw exception when wrong format is passed to year parameter of constructor")
+    @ParameterizedTest
+    @ValueSource(ints = {89,999})
+    public void shouldThrowExceptionWhenYearToWrongFormatInConstructor(int arg)
+    {
+        IllegalArgumentException exception = assertThrows(IllegalArgumentException.class,()->new LspRevenue(arg,new BigDecimal(34.8),provider));
+        assertEquals("Year should be in YYYY format",exception.getMessage());
     }
 }

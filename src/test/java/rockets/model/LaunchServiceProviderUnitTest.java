@@ -1,6 +1,5 @@
 package rockets.model;
 
-import org.apache.commons.lang3.ObjectUtils;
 import org.junit.jupiter.api.BeforeEach;
 import org.junit.jupiter.api.DisplayName;
 import org.junit.jupiter.api.Test;
@@ -8,7 +7,6 @@ import org.junit.jupiter.params.ParameterizedTest;
 import org.junit.jupiter.params.provider.ValueSource;
 
 import java.math.BigDecimal;
-import java.time.LocalDate;
 import java.util.ArrayList;
 import java.util.HashSet;
 import java.util.Set;
@@ -223,7 +221,6 @@ public class LaunchServiceProviderUnitTest {
         LaunchServiceProvider manufacturer = new LaunchServiceProvider("SpaceX", 2002, "USA");
         Rocket rocket = new Rocket(name, country, manufacturer);
         rockets.add(rocket);
-
         target.setRockets(rockets);
 
         assertEquals(target.getRockets(),rockets);

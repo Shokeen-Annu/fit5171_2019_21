@@ -1,11 +1,9 @@
 package rockets.mining;
 
 import com.google.common.collect.Lists;
-import org.neo4j.cypher.internal.frontend.v3_2.phases.Do;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 import rockets.dataaccess.DAO;
-import rockets.dataaccess.neo4j.Neo4jDAO;
 import rockets.model.*;
 import static org.apache.commons.lang3.Validate.notBlank;
 import java.math.BigDecimal;
@@ -17,13 +15,8 @@ import rockets.model.Rocket;
 import java.util.*;
 import java.util.stream.Collectors;
 import java.util.ArrayList;
-import java.util.Map.Entry;
-import java.util.Set;
 
 import java.util.Iterator;
-import org.neo4j.harness.ServerControls;
-
-import static org.neo4j.ogm.cypher.ComparisonOperator.EQUALS;
 
 public class RocketMiner {
 
@@ -231,7 +224,7 @@ public class RocketMiner {
                             revenue.addRevenue(price);
                             revenueCollection.add(revenue);
                             flag = true;
-                            logger.info(revenue.getLsp()+" : "+revenue.getRevenue());
+
                         }
                     }
                     if(!flag)
@@ -254,7 +247,6 @@ public class RocketMiner {
             }
         }
 
-       // Collection<LspRevenue> revenueCollection = sessionDao.loadAll(LspRevenue.class);
         Comparator<LspRevenue> revenueComparator = (a, b) -> -a.getRevenue().compareTo(b.getRevenue());
         List<LspRevenue> sortedRevenue = revenueCollection.stream().sorted(revenueComparator).limit(k).collect(Collectors.toList());
         List<LaunchServiceProvider> lspList = new ArrayList<LaunchServiceProvider>();

@@ -106,7 +106,7 @@ public class  Launch extends Entity {
     public void setPrice(BigDecimal price) {
         notNull(price,"price cannot be null");
         BigDecimal comparePrice = new BigDecimal(0);
-        if(price.compareTo(comparePrice) == 1)
+        if(price.compareTo(comparePrice) > 0)
            this.price = price;
         else
             throw new IllegalArgumentException("price cannot be zero or negative");

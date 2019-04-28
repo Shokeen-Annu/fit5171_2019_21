@@ -5,14 +5,12 @@ import org.junit.jupiter.api.BeforeEach;
 import org.junit.jupiter.api.Test;
 import org.junit.jupiter.params.ParameterizedTest;
 import org.junit.jupiter.params.provider.ValueSource;
-import org.mockito.Mockito;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 import rockets.dataaccess.DAO;
 import rockets.dataaccess.neo4j.Neo4jDAO;
 import rockets.model.Launch;
 import rockets.model.LaunchServiceProvider;
-import rockets.model.LspRevenue;
 import rockets.model.Rocket;
 
 import java.math.BigDecimal;
@@ -20,9 +18,6 @@ import java.time.LocalDate;
 import java.util.*;
 import java.util.stream.Collectors;
 import java.util.stream.IntStream;
-import java.util.Random;
-
-import static java.util.stream.Collectors.*;
 import static org.junit.jupiter.api.Assertions.*;
 import static org.mockito.Mockito.*;
 
@@ -155,7 +150,7 @@ public class RocketMinerUnitTest {
 
     @ParameterizedTest
     @ValueSource(ints = {1,2,3})
-    public void shouldReturnTopMostMostReliableLaunchServiceProviders(int k) {
+    public void shouldReturnTopMostReliableLaunchServiceProviders(int k) {
         when(dao.loadAll(Launch.class)).thenReturn(launches1);
         when(dao.loadAll(LaunchServiceProvider.class)).thenReturn(lsps);
         List<LaunchServiceProvider> lsp = new ArrayList<>();

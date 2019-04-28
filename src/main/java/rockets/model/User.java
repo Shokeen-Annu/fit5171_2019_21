@@ -91,12 +91,14 @@ public class User extends Entity {
                 '}';
     }
     public static boolean isEmailValidFormat(String email) {
+        notBlank(email,"input should not be null or empty");
         String regex = "^[A-Za-z0-9+_.-]+@(.+)$";
         Pattern p = Pattern.compile(regex);
         return p.matcher(email).matches();
     }
 
     public boolean isPasswordValidFormat(String pwd){
+        notBlank(pwd,"input should not be null or empty");
         boolean result = true;
         String num= "(.*[0-9].*)";
         String upperChars = "(.*[A-Z].*)";

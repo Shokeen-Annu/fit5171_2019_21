@@ -5,6 +5,8 @@ import org.junit.jupiter.api.*;
 import org.neo4j.graphdb.GraphDatabaseService;
 import org.neo4j.harness.ServerControls;
 import org.neo4j.harness.TestServerBuilders;
+import org.neo4j.ogm.cypher.Filter;
+import org.neo4j.ogm.cypher.Filters;
 import org.neo4j.ogm.drivers.embedded.driver.EmbeddedDriver;
 import org.neo4j.ogm.session.Session;
 import org.neo4j.ogm.session.SessionFactory;
@@ -13,10 +15,12 @@ import rockets.model.*;
 
 import java.math.BigDecimal;
 import java.time.LocalDate;
+import java.util.ArrayList;
 import java.util.Collection;
 import java.util.Set;
 
 import static org.junit.jupiter.api.Assertions.*;
+import static org.neo4j.ogm.cypher.ComparisonOperator.EQUALS;
 
 @TestInstance(TestInstance.Lifecycle.PER_CLASS)
 public class Neo4jDAOUnitTest {
@@ -226,9 +230,30 @@ public class Neo4jDAOUnitTest {
         assertTrue(dao.loadAll(Launch.class).isEmpty());
     }
 
+    @Test
+    public void shouldLoadLspRevenueWithFilters()
+    {
+        LaunchServiceProvider provider = new LaunchServiceProvider("SpaceX",2002,"USA");
+        ArrayList<LspRevenue> revenues = new ArrayList<LspRevenue>();
+        LspRevenue r1 = new LspRevenue(2018,new BigDecimal(35.33),provider);
+        LspRevenue r2 = new LspRevenue(2017,new BigDecimal(50.33),provider);
+        LspRevenue r3 = new LspRevenue(2018,new BigDecimal(65.33),provider);
 
+        revenues.add(r1);
+        revenues.add(r2);
+        revenues.add(r3);
 
+        for (LspRevenue r : revenues) {
+            dao.createOrUpdate(r);
+        }
 
+        Filters filters = new Filters();
+        filters.add(new Filter("year", EQUALS,2018));
+
+        Collection<LspRevenue> loadedRevenues = dao.loadWithFilter(LspRevenue.class,filters);
+        assertEquals(loadedRevenues.size(),2);
+
+    }
 
     @AfterEach
     public void tearDown() {

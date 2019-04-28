@@ -7,6 +7,8 @@ import org.junit.jupiter.api.Test;
 import org.junit.jupiter.params.ParameterizedTest;
 import org.junit.jupiter.params.provider.ValueSource;
 
+import java.time.LocalDate;
+
 import static org.junit.jupiter.api.Assertions.*;
 
 public class RocketUnitTest {
@@ -116,15 +118,8 @@ public class RocketUnitTest {
         assertNotNull(bfr);
     }
 
-    @DisplayName("should throw exception when given null manufacturer to constructor")
-    @Test
-    public void shouldThrowExceptionWhenNoManufacturerGiven() {
-        String name = "BFR";
-        String country = "USA";
-        assertThrows(NullPointerException.class, () -> new Rocket(name, country, null));
-    }
-
     @DisplayName("should set rocket massToLEO value")
+    @ParameterizedTest
     @ValueSource(strings = {"10000", "15000"})
     public void shouldSetMassToLEOWhenGivenCorrectValue(String massToLEO) {
         String name = "BFR";
@@ -145,5 +140,67 @@ public class RocketUnitTest {
         LaunchServiceProvider manufacturer = new LaunchServiceProvider("SpaceX", 2002, "USA");
         Rocket bfr = new Rocket(name, country, manufacturer);
         assertThrows(NullPointerException.class, () -> bfr.setMassToLEO(null));
+    }
+    @DisplayName("should throw exception when set massToGTO to null")
+    @Test
+    public void shouldThrowExceptionWhenSetMassToGTOToNull() {
+
+        assertThrows(NullPointerException.class, () -> rocket.setMassToGTO(null));
+    }
+    @DisplayName("should throw exception when set massToLEO to empty or spaces")
+    @ParameterizedTest
+    @ValueSource(strings = {"","  "})
+    public void shouldThrowExceptionWhenSetMassToLEOToEmpty(String arg) {
+        IllegalArgumentException exception=   assertThrows(IllegalArgumentException.class, () -> rocket.setMassToLEO(arg));
+        assertEquals(exception.getMessage(),"massToLEO cannot be empty or spaces or null");
+    }
+    @DisplayName("should throw exception when set massToGTO to empty or spaces")
+    @ParameterizedTest
+    @ValueSource(strings = {"","  "})
+    public void shouldThrowExceptionWhenSetMassToGTOToEmpty(String arg) {
+        IllegalArgumentException exception=   assertThrows(IllegalArgumentException.class, () -> rocket.setMassToGTO(arg));
+        assertEquals(exception.getMessage(),"massToGTO cannot be empty or spaces or null");
+    }
+
+    @DisplayName("Should return false when null is passed to equals method")
+    @Test
+    public void shouldReturnFalseWhenNullPassedToEquals()
+    {
+        assertFalse(rocket.equals(null));
+    }
+
+    @DisplayName("Should return false when string is passed to equals method")
+    @Test
+    public void shouldReturnFalseWhenStringPassedToEquals()
+    {
+        assertFalse(rocket.equals("text"));
+    }
+
+    @DisplayName("Equals method should return true when two rocket objects are equal")
+    @Test
+    public void equalsMethodShouldReturnTrueWhenTwoRocketObjectsAreEqual()
+    {
+        Rocket rocket1 = new Rocket("W2M","India",new LaunchServiceProvider("Antrix", 1992, "India"));
+        Rocket rocket2 = new Rocket("W2M","India",new LaunchServiceProvider("Antrix", 1992, "India"));
+
+        assertTrue(rocket1.equals(rocket2));
+    }
+
+    @DisplayName("Equals method should return false when two rocket objects are not equal")
+    @Test
+    public void equalsMethodShouldReturnFalseWhenTwoRocketObjectsAreNotEqual()
+    {
+        Rocket rocket1 = new Rocket("W2M","India",new LaunchServiceProvider("Antrix", 1992, "India"));
+        Rocket rocket2 = new Rocket("W2M","USA",new LaunchServiceProvider("Antrix", 1992, "India"));
+        assertFalse(rocket1.equals(rocket2));
+    }
+
+    @DisplayName("Integration testing of Launch service provider with Rocket class")
+    @Test
+    public void rocketObjectShouldContainLaunchServiceProvider()
+    {
+        LaunchServiceProvider provider = new LaunchServiceProvider("SpaceX", 2002, "USA");
+        Rocket rocket1 = new Rocket("rocket_X", "Australia",provider);
+        assertEquals(rocket1.getManufacturer(),provider);
     }
 }

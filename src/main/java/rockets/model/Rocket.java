@@ -66,7 +66,7 @@ public class Rocket extends Entity {
 
     public void setMassToLEO(String massToLEO) {
         try {
-            notBlank(massToLEO);
+            notBlank(massToLEO,"massToLEO cannot be empty or spaces or null");
             int mass = Integer.parseInt(massToLEO);
             checkValueShouldNotBeNegative(mass);
             this.massToLEO = massToLEO;
@@ -79,6 +79,7 @@ public class Rocket extends Entity {
 
     public void setMassToGTO(String massToGTO) {
         try {
+            notBlank(massToGTO,"massToGTO cannot be empty or spaces or null");
             int mass = Integer.parseInt(massToGTO);
             checkValueShouldNotBeNegative(mass);
             this.massToGTO = massToGTO;

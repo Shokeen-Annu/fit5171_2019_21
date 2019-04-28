@@ -5,6 +5,7 @@ import org.junit.jupiter.api.DisplayName;
 import org.junit.jupiter.api.Test;
 import org.junit.jupiter.params.ParameterizedTest;
 import org.junit.jupiter.params.provider.ValueSource;
+import org.mockito.internal.matchers.Null;
 
 import static org.junit.jupiter.api.Assertions.*;
 
@@ -56,7 +57,7 @@ public class UserUnitTest {
     @DisplayName("should throw exception when pass a empty password to setPassword function")
     @ParameterizedTest
     @ValueSource(strings = {"", " ", "  "})
-    public void shouldThrowExceptionWhenPasswordSetToEmpty(String password) {
+    public void shouldThrowExceptionWhenSetPasswordToEmpty(String password) {
         IllegalArgumentException exception = assertThrows(IllegalArgumentException.class, () -> target.setPassword(password));
         assertEquals("password cannot be null or empty", exception.getMessage());
     }
@@ -128,7 +129,7 @@ public class UserUnitTest {
 
     @DisplayName("should set Email in valid format")
     @Test
-    public void shouldSetEmailInValidFormat() {
+    public void shouldSetEmailWhenInputIsValidFormat() {
         target.setEmail("pranav123@gmail.com");
         assertEquals("pranav123@gmail.com", target.getEmail());
 
@@ -136,9 +137,94 @@ public class UserUnitTest {
 
     @DisplayName("should set password in valid format")
     @Test
-    public void shouldSetPasswordInValidFormat() {
+    public void shouldSetPasswordWhenInputIsValidFormat() {
         target.setPassword("pranav123@A");
         assertEquals("pranav123@A", target.getPassword());
 
+    }
+    @DisplayName("Should return false when null is passed to equals method")
+    @Test
+    public void shouldReturnFalseWhenNullPassedToEquals()
+    {
+        assertFalse(target.equals(null));
+    }
+
+    @DisplayName("Should return false when string is passed to equals method")
+    @Test
+    public void shouldReturnFalseWhenStringPassedToEquals()
+    {
+        assertFalse(target.equals("text"));
+    }
+
+    @DisplayName("Equals method should return true when two user objects are equal")
+    @Test
+    public void equalsMethodShouldReturnTrueWhenTwoUserObjectsAreEqual()
+    {
+        User user1 = new User();
+        user1.setFirstName("Pranav");
+        user1.setLastName("Kumar");
+        user1.setEmail("pranav123@gmail.com");
+        user1.setPassword("pranav123@A");
+
+        User user2 = new User();
+        user2.setFirstName("Pranav");
+        user2.setLastName("Kumar");
+        user2.setEmail("pranav123@gmail.com");
+        user2.setPassword("pranav123@A");
+
+        assertTrue(user1.equals(user2));
+    }
+
+    @DisplayName("Equals method should return false when two user objects are not equal")
+    @Test
+    public void equalsMethodShouldReturnFalseWhenTwoUserObjectsAreNotEqual()
+    {
+        User user1 = new User();
+        user1.setFirstName("Pranav");
+        user1.setLastName("Kumar");
+        user1.setEmail("pranav123@gmail.com");
+        user1.setPassword("pranav123@A");
+
+        User user2 = new User();
+        user2.setFirstName("Pranav");
+        user2.setLastName("Kumari");
+        user2.setEmail("pranav123456@gmail.com");
+        user2.setPassword("pranav123@A");
+
+        assertFalse(user1.equals(user2));
+    }
+
+    @DisplayName("Input to isEmailValidFormat should not be null or empty or spaces")
+    @ParameterizedTest
+    @ValueSource(strings={"","  "})
+    public void shouldReturnExceptionWhenInputIsEmptyToCheckEmailFormat(String arg)
+    {
+        IllegalArgumentException exception = assertThrows(IllegalArgumentException.class,()->target.isEmailValidFormat(arg));
+        assertEquals(exception.getMessage(),"input should not be null or empty");
+    }
+
+    @DisplayName("Input to isPasswordValidFormat should not be null or empty or spaces")
+    @ParameterizedTest
+    @ValueSource(strings={"","  "})
+    public void shouldReturnExceptionWhenInputIsEmptyToCheckPasswordFormat(String arg)
+    {
+        IllegalArgumentException exception = assertThrows(IllegalArgumentException.class,()->target.isPasswordValidFormat(arg));
+        assertEquals(exception.getMessage(),"input should not be null or empty");
+    }
+
+    @DisplayName("Input to isEmailValidFormat should not be null or empty or spaces")
+    @Test
+    public void shouldReturnExceptionWhenInputIsNullToCheckEmailFormat()
+    {
+        NullPointerException exception = assertThrows(NullPointerException.class,()->target.isEmailValidFormat(null));
+        assertEquals(exception.getMessage(),"input should not be null or empty");
+    }
+
+    @DisplayName("Input to isPasswordValidFormat should not be null or empty or spaces")
+    @Test
+    public void shouldReturnExceptionWhenInputIsNullToCheckPasswordFormat()
+    {
+        NullPointerException exception = assertThrows(NullPointerException.class,()->target.isPasswordValidFormat(null));
+        assertEquals(exception.getMessage(),"input should not be null or empty");
     }
 }

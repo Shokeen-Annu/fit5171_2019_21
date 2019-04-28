@@ -71,4 +71,9 @@ public class LspRevenue extends Entity {
                 ", Total Revenue='" + revenue + '\'' +
                 '}';
     }
+
+    @Override
+    public int hashCode() {
+        return Objects.hash(year,lsp,revenue);
+    }
 }
