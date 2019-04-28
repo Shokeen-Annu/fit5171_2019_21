@@ -102,24 +102,8 @@ public class User extends Entity {
         String upperChars = "(.*[A-Z].*)";
         String lowerChars = "(.*[a-z].*)";
         String specialChars = "(.*[,~,!,@,#,$,%,^,&,*,(,),-,_,=,+,[,{,],},|,;,:,<,>,/,?].*$)";
-        if (pwd.length() > 15 || pwd.length() < 8)
+        if ((pwd.length() > 15 || pwd.length() < 8) || (!pwd.matches(upperChars)) || (!pwd.matches(lowerChars)) || (!pwd.matches(num)) || (!pwd.matches(specialChars)))
         {
-            result = false;
-        }
-        if (!pwd.matches(upperChars))
-        {
-            result = false;
-        }
-        if (!pwd.matches(lowerChars)) {
-            result = false;
-        }
-        if (!pwd.matches(specialChars)) {
-            result = false;
-        }
-        if (!pwd.matches(num)) {
-            result = false;
-        }
-        if(!pwd.matches(upperChars)){
             result = false;
         }
         return result;
