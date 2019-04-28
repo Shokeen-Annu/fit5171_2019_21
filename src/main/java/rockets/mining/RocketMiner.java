@@ -24,6 +24,9 @@ public class RocketMiner {
 
     private DAO dao;
 
+    //Resolving SonarQube code smells
+    private String launches=" launches";
+
     public RocketMiner(DAO dao) {
         this.dao = dao;
     }
@@ -36,7 +39,7 @@ public class RocketMiner {
      * @return the list of k most active rockets.
     */
     public List<Rocket> mostLaunchedRockets(int k) {
-        logger.info("find most launched rockets " + k + " launches");
+        logger.info("find most launched rockets {0} {1}",k,launches);
         Collection<Launch> launches = dao.loadAll(Launch.class);
         List<Rocket> r = new ArrayList<>();
 
@@ -67,7 +70,7 @@ public class RocketMiner {
      */
 
     public List<LaunchServiceProvider> mostReliableLaunchServiceProviders(int k) {
-        logger.info("find most reliable rockets " + k + " launches");
+        logger.info("find most reliable rockets {0} {1}" ,k,launches);
         Collection<Launch> launches1 = dao.loadAll(Launch.class);
         Collection<LaunchServiceProvider> lsp = dao.loadAll(LaunchServiceProvider.class);
         Map<LaunchServiceProvider, Double> hashmap = new HashMap<>();
@@ -114,7 +117,7 @@ public class RocketMiner {
      * @return the list of k most recent launches.
      */
     public List<Launch> mostRecentLaunches(int k) {
-        logger.info("find most recent " + k + " launches");
+        logger.info("find most recent {0} {1}",k,launches);
         Collection<Launch> launches = dao.loadAll(Launch.class);
         Comparator<Launch> launchDateComparator = (a, b) -> -a.getLaunchDate().compareTo(b.getLaunchDate());
         return launches.stream().sorted(launchDateComparator).limit(k).collect(Collectors.toList());
@@ -131,7 +134,7 @@ public class RocketMiner {
     public String dominantCountry(String orbit) {
         notBlank(orbit,"orbit should not be null or empty");
         Collection<Launch> launches=dao.loadAll(Launch.class);
-        HashMap<String,Integer> dictionary=new HashMap<String,Integer>();
+        HashMap<String,Integer> dictionary=new HashMap<>();
         Iterator<Launch> launchIterator = launches.iterator();
         while(launchIterator.hasNext())
         {
@@ -178,7 +181,7 @@ public class RocketMiner {
      * @return the list of k most expensive launches.
      */
     public List<Launch> mostExpensiveLaunches(int k) {
-        logger.info("find most expensive " + k + " launches");
+        logger.info("find most expensive {0} {1}" ,k ,launches);
         Collection<Launch> launches = dao.loadAll(Launch.class);
         Comparator<Launch> launchPriceComparator = (a, b) -> -a.getPrice().compareTo(b.getPrice());
         return launches.stream().sorted(launchPriceComparator).limit(k).collect(Collectors.toList());
@@ -196,7 +199,7 @@ public class RocketMiner {
      */
     public List<LaunchServiceProvider> highestRevenueLaunchServiceProviders(int k, int year) {
 
-        logger.info("find top "+k+" launch service providers with highest revenue");
+        logger.info("find top {0} launch service providers with highest revenue",k);
 
         if(k<=0)
             throw new IllegalArgumentException("k should be greater than 0");
@@ -229,7 +232,7 @@ public class RocketMiner {
                     }
                     if(!flag)
                     {
-                        ArrayList<LspRevenue> revList = new ArrayList<LspRevenue>();
+                        ArrayList<LspRevenue> revList = new ArrayList<>();
                         LspRevenue rev = new LspRevenue(year, price,lsp);
                         revList.add(rev);
                         lsp.setRevenue(revList);
@@ -238,7 +241,7 @@ public class RocketMiner {
                     }
                 }
                 else {
-                    ArrayList<LspRevenue> revList = new ArrayList<LspRevenue>();
+                    ArrayList<LspRevenue> revList = new ArrayList<>();
                     LspRevenue rev = new LspRevenue(year, price,lsp);
                     revList.add(rev);
                     lsp.setRevenue(revList);
@@ -249,7 +252,7 @@ public class RocketMiner {
 
         Comparator<LspRevenue> revenueComparator = (a, b) -> -a.getRevenue().compareTo(b.getRevenue());
         List<LspRevenue> sortedRevenue = revenueCollection.stream().sorted(revenueComparator).limit(k).collect(Collectors.toList());
-        List<LaunchServiceProvider> lspList = new ArrayList<LaunchServiceProvider>();
+        List<LaunchServiceProvider> lspList = new ArrayList<>();
         for(LspRevenue revenue:sortedRevenue)
         {
             lspList.add(revenue.getLsp());

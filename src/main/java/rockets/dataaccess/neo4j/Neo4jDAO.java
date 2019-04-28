@@ -75,7 +75,6 @@ public class Neo4jDAO implements DAO {
         }else if (clazz.equals(LspRevenue.class)) {
             LspRevenue revenue = (LspRevenue) entity;
             filters.add(new Filter("year", EQUALS, revenue.getYear()))
-                    .and(new Filter("revenue", EQUALS, revenue.getRevenue()))
                     .and(new Filter("lsp", EQUALS, revenue.getLsp()));
             collection = session.loadAll(LspRevenue.class, filters);
         }
